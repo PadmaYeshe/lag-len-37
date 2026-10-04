@@ -1,0 +1,24 @@
+CADERNO DE GRAMÁTICA: AS TRINTA E SETE PRÁTICAS (build ab)
+App instalável pelo navegador (PWA)
+
+COMO PUBLICAR
+1. Copie todos os arquivos desta pasta para uma mesma pasta do site, por exemplo:
+   https://tibetan.padmakara.pt/workbook/
+2. O site precisa ser servido por HTTPS (condição para a instalação e para o uso offline).
+3. Abra o endereço no navegador. Na primeira visita com internet, a App guarda tudo o que
+   precisa (inclusive as fontes) e passa a funcionar sem conexão.
+
+COMO OS ALUNOS INSTALAM
+- iPhone / iPad (Safari): botão Compartilhar > "Adicionar à Tela de Início".
+- Android (Chrome): menu de três pontos > "Instalar aplicativo" ou "Adicionar à tela inicial".
+- Computador (Chrome ou Edge): ícone de instalação na barra de endereço.
+
+COMO ATUALIZAR
+1. Substitua index.html pela nova versão.
+2. Em sw.js, troque o nome em CACHE (por exemplo, de "lag-len-ab" para "lag-len-ac").
+   Sem essa troca, os aparelhos continuam a mostrar a versão antiga.
+
+OBSERVAÇÕES
+- O progresso, as anotações e as respostas ficam guardados apenas no aparelho de cada aluno.
+- Arquivos: index.html, manifest.webmanifest, sw.js, icon-180.png, icon-192.png,
+  icon-512.png, icon-512-maskable.png.

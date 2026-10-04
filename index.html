@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Thirty-Seven Practices: a grammar workbook</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#8A2236">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lag len 37">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&family=Noto+Serif+Tibetan:wght@400;600&display=swap">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --paper:#E9EEEA; --leaf:#FBFBF6; --ink:#1B2533; --muted:#566373; --line:#C5CEC8;
+  --lapis:#1F4E8C; --lapis-soft:#DDE7F4;
+  --gold:#8F5D00; --gold-soft:#F6E6BF; --gold-edge:#D9A632;
+  --maroon:#8A2236; --ok:#256B45; --ok-soft:#DCEFE3; --bad:#9A2B2B; --bad-soft:#F6DFDF;
+  --tib:"Noto Serif Tibetan","Jomolhari","Microsoft Himalaya","Kailasa",serif;
+  --serif:"Gentium Book Plus","Charis SIL",Georgia,serif;
+  --sans:"Alegreya Sans","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#131921; --leaf:#1C242F; --ink:#E7ECEF; --muted:#9BA8B5; --line:#33404E;
+    --lapis:#8DB4EA; --lapis-soft:#21334B;
+    --gold:#E7B550; --gold-soft:#3A2F17; --gold-edge:#B58A2A;
+    --maroon:#EC97A5; --ok:#7CC49C; --ok-soft:#1D3528; --bad:#EE9494; --bad-soft:#3A2020;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131921; --leaf:#1C242F; --ink:#E7ECEF; --muted:#9BA8B5; --line:#33404E;
+  --lapis:#8DB4EA; --lapis-soft:#21334B;
+  --gold:#E7B550; --gold-soft:#3A2F17; --gold-edge:#B58A2A;
+  --maroon:#EC97A5; --ok:#7CC49C; --ok-soft:#1D3528; --bad:#EE9494; --bad-soft:#3A2020;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:1.0625rem;line-height:1.5}
+button,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--lapis);outline-offset:2px}
+.wrap{max-width:58rem;margin:0 auto;padding:1.25rem 1rem 4rem}
+
+header h1{font-family:var(--tib);font-weight:600;font-size:clamp(1.9rem,6vw,3rem);line-height:1.7;margin:0;color:var(--maroon)}
+header p.sub{font-family:var(--serif);font-size:1.25rem;margin:.1rem 0 .6rem}
+header p.how{margin:0 0 1rem;color:var(--muted);max-width:44rem}
+.key{display:inline-block;padding:0 .45rem;border-radius:.3rem;font-weight:700}
+.key.solo{background:var(--gold-soft);color:var(--gold)}
+.key.class{background:var(--lapis-soft);color:var(--lapis)}
+
+/* lesson strip: one pecha leaf per lesson */
+nav.leaves{display:flex;gap:.5rem;overflow-x:auto;padding:.25rem .1rem .9rem;margin:0 -.1rem}
+nav.leaves button{flex:0 0 auto;min-width:5.2rem;background:var(--leaf);border:1px solid var(--line);border-radius:.2rem;padding:.45rem .7rem .4rem;text-align:left}
+nav.leaves button[aria-current="true"]{border-color:var(--maroon);box-shadow:inset 0 -4px 0 var(--maroon)}
+nav.leaves .lab{display:block;font-weight:700}
+nav.leaves .pips{display:flex;gap:4px;margin-top:.3rem}
+nav.leaves .pips i{width:14px;height:5px;border-radius:2px;background:var(--line)}
+nav.leaves .pips i.on.solo{background:var(--gold-edge)}
+nav.leaves .pips i.on.class{background:var(--lapis)}
+.overall{color:var(--muted);margin:0 0 .4rem;font-size:1rem}
+
+/* the leaf: the stanza itself */
+.leaf{background:var(--leaf);border:1px solid var(--line);border-left:10px solid var(--maroon);border-radius:.2rem;padding:1rem 1.1rem 1.1rem}
+.leaf h2{font-family:var(--serif);font-weight:700;font-size:1.35rem;margin:0 0 .3rem}
+.leaf .tools{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:center;color:var(--muted);font-size:1rem;margin-bottom:.4rem}
+.leaf .tools label{display:inline-flex;gap:.4rem;align-items:center;cursor:pointer}
+.tibwrap{overflow-x:auto}
+.tibline{font-family:var(--tib);font-size:clamp(1.45rem,4.4vw,2.15rem);line-height:2.15;margin:0;white-space:nowrap}
+.seg{border-bottom:2px dotted var(--line);cursor:pointer;border-radius:.2rem .2rem 0 0}
+.seg:hover{background:var(--gold-soft)}
+.seg.seen{border-bottom-style:solid}
+.seg.sel{background:var(--gold-soft);border-bottom-color:var(--gold-edge)}
+.showp .seg.p{color:var(--maroon)}
+.gloss{min-height:4.2rem;margin-top:.7rem;padding:.6rem .8rem;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:.2rem 1rem;align-items:baseline}
+.gloss .gt{font-family:var(--tib);font-size:1.6rem;line-height:1.8}
+.gloss .gw{font-family:var(--serif);font-style:italic}
+.gloss .gk{font-size:.95rem;font-weight:700;color:var(--maroon)}
+.gloss .gm{flex-basis:100%}
+.gloss.empty{color:var(--muted)}
+
+/* three steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:1.2rem 0 0}
+.steps button{background:transparent;border:1px solid var(--line);border-bottom:none;border-radius:.4rem .4rem 0 0;padding:.55rem .7rem;text-align:left;line-height:1.25}
+.steps button b{display:block}
+.steps button span{color:var(--muted);font-size:.95rem}
+.steps button.solo[aria-selected="true"]{background:var(--gold-soft);border-color:var(--gold-edge)}
+.steps button.class[aria-selected="true"]{background:var(--lapis-soft);border-color:var(--lapis)}
+.steps button .tick{float:right;font-weight:700}
+.panel{background:var(--leaf);border:1px solid var(--line);border-radius:0 0 .4rem .4rem;padding:1.1rem 1.1rem 1.3rem}
+.panel.solo{border-top:4px solid var(--gold-edge)}
+.panel.class{border-top:4px solid var(--lapis)}
+.panel h3{font-family:var(--serif);font-size:1.15rem;margin:1.3rem 0 .4rem}
+.panel h3:first-child{margin-top:0}
+.panel p{margin:.3rem 0 .6rem;max-width:42rem}
+.task{display:flex;gap:.6rem;align-items:flex-start;margin:.35rem 0}
+.task input{width:1.15rem;height:1.15rem;margin-top:.25rem}
+.count{color:var(--muted)}
+
+.card{width:100%;max-width:26rem;min-height:9rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;padding:1rem;text-align:center}
+.card .ct{font-family:var(--tib);font-size:2.1rem;line-height:1.9}
+.card .cw{font-family:var(--serif);font-style:italic}
+.card .hint{color:var(--muted);font-size:.95rem}
+.row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:.6rem}
+.btn{border:1px solid var(--ink);background:transparent;border-radius:.35rem;padding:.4rem .9rem;font-weight:500}
+.btn.main{background:var(--ink);color:var(--leaf)}
+.btn:disabled{opacity:.45;cursor:default}
+textarea{width:100%;max-width:42rem;min-height:5.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.35rem;padding:.6rem .7rem;display:block}
+.reveal{font-family:var(--serif);font-size:1.12rem;line-height:1.6;border-left:4px solid var(--gold-edge);padding:.2rem 0 .2rem .8rem;margin-top:.7rem;max-width:42rem}
+
+details.talk{border:1px solid var(--line);border-radius:.35rem;margin:.5rem 0;max-width:44rem;background:var(--paper)}
+details.talk summary{padding:.6rem .8rem;cursor:pointer;font-weight:500}
+details.talk .ans{padding:0 .8rem .8rem;font-family:var(--serif);font-size:1.08rem;line-height:1.6}
+.t{font-family:var(--tib);font-size:1.25em;line-height:1.6}
+
+.q{margin:0 0 1.2rem;max-width:44rem}
+.q .qt{font-weight:500;margin-bottom:.4rem}
+.opts{display:flex;flex-wrap:wrap;gap:.5rem}
+.opts button{border:1px solid var(--line);background:var(--paper);border-radius:.35rem;padding:.4rem .8rem;text-align:left}
+.opts button.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);font-weight:700}
+.opts button.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.why{margin-top:.45rem;font-family:var(--serif)}
+.score{font-weight:700;margin:.6rem 0}
+footer{margin-top:2rem;color:var(--muted);font-size:.95rem}
+footer button{background:none;border:none;text-decoration:underline;color:inherit;padding:0}
+@media (max-width:34rem){
+  .steps{grid-template-columns:1fr;gap:.3rem}
+  .steps button{border-bottom:1px solid var(--line);border-radius:.4rem}
+  .panel{border-radius:.4rem;margin-top:.5rem}
+}
+@media (prefers-reduced-motion:no-preference){ .seg,.opts button{transition:background-color .15s} }
+
+.qline{display:inline-block;font-size:1.45em;line-height:2;margin-top:.2rem}
+.qline mark{background:var(--gold-soft);color:var(--maroon);border-bottom:3px solid var(--gold-edge);padding:0 .1em}
+.answer{min-height:2.2em;border-bottom:1px dashed var(--line);white-space:normal}
+.pool{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}
+.pool button{border:1px solid var(--line);background:var(--paper);border-radius:.35rem;padding:.1rem .7rem;font-size:1.5rem;line-height:1.9}
+.pool button.wrong{background:var(--bad-soft);border-color:var(--bad)}
+details.sheet{border-top:1px solid var(--line);margin-top:.6rem;padding-top:.5rem}
+details.sheet summary{cursor:pointer;font-weight:700}
+.trans{font-family:var(--serif);font-size:1.12rem;line-height:1.6;max-width:44rem;margin:.5rem 0 .2rem}
+.vocwrap{overflow-x:auto;margin-top:.5rem}
+table.voc{border-collapse:collapse;width:100%;max-width:46rem}
+table.voc th{text-align:left;font-weight:700;border-bottom:2px solid var(--line);padding:.3rem .6rem .3rem 0}
+table.voc td{border-bottom:1px solid var(--line);padding:.25rem .6rem .25rem 0;vertical-align:baseline}
+table.voc td.t{font-size:1.45rem;line-height:1.8;white-space:nowrap}
+table.voc td.vw{font-family:var(--serif);font-style:italic;white-space:nowrap}
+table.voc tr.p td.t{color:var(--maroon)}
+table.voc .gk{font-size:.9rem;font-weight:700;color:var(--maroon)}
+.tibline.small{font-size:clamp(1.2rem,3.6vw,1.6rem);line-height:2}
+.allhead{display:block;margin:1.4rem 0 .2rem;padding:0;border:none;background:none;font-family:var(--serif);font-weight:700;font-size:1.15rem;text-decoration:underline;color:var(--lapis)}
+nav.leaves .pips i.none{background:transparent}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>རྒྱལ་སྲས་ལག་ལེན་སོ་བདུན་མ།</h1>
+    <p class="sub">The Thirty-Seven Practices of the Bodhisattvas: a grammar workbook</p>
+    <p class="how">One lesson per stanza, three steps per lesson, with exercises before and after class. Steps marked <span class="key solo">on your own</span> are done alone, before and after class. The step marked <span class="key class">with the teacher</span> is the part to work through in class.</p>
+  </header>
+  <p class="overall" id="overall"></p>
+  <nav class="leaves" id="nav" aria-label="Lessons"></nav>
+  <main id="main"></main>
+  <footer>Your ticks, notes and answers are saved in this browser only. <button id="reset">Clear my progress</button> Build ab.</footer>
+</div>
+
+<script>
+"use strict";
+/* segment: [tibetan, wylie, meaning, "p" if particle] */
+var P="p";
+var REFRAIN=[["རྒྱལ་སྲས་","rgyal sras","bodhisattva (child of the Victorious Ones)"],["ལག་ལེན་","lag len","practice"],["ཡིན","yin","is"]];
+var LESSONS=[
+{id:"T",tab:"Title",name:"The title",
+ lines:[[["རྒྱལ་སྲས་","rgyal sras","bodhisattva; literally, child of the Victorious Ones"],["ལག་ལེན་","lag len","practice; literally, taking in hand"],["སོ་བདུན་","so bdun","thirty-seven"],["མ་","ma","suffix that turns the phrase into the name of a text",P],["བཞུགས་","bzhugs","is present, is contained (honorific)"],["སོ","so","final particle: closes the sentence",P]]],
+ tr:"Herein is contained the Thirty-Seven Practices of the Bodhisattvas.",
+ talk:[
+  ["Where has the genitive gone in རྒྱལ་སྲས་ལག་ལེན་?","It is dropped twice. In prose: རྒྱལ་བའི་སྲས་ཀྱི་ལག་ལེན་. Compounds and verse regularly leave particles out; restoring them is the first step in reading any line of this text."],
+  ["Why སོ་ and not སུམ་ཅུ་?","སོ་ is the combining form of སུམ་ཅུ་ used for 31 to 39. Each decade has one: ཉེར་ (20s), སོ་ (30s), ཞེ་ (40s), ང་ (50s), རེ་ (60s), དོན་ (70s), གྱ་ (80s), གོ་ (90s)."],
+  ["Why is the final particle སོ་ here?","The final particle copies the last letter of the syllable before it and adds the vowel o. བཞུགས་ ends in ས་, so the particle is སོ་."]
+ ],
+ quiz:[
+  ["Which final particle follows ཡིན་?",["ནོ་","སོ་","ལོ་"],"The final particle copies the suffix: ཡིན་ ends in ན་."],
+  ["How would རྒྱལ་སྲས་ read in prose?",["རྒྱལ་བའི་སྲས་","རྒྱལ་བས་སྲས་","རྒྱལ་བ་ལ་སྲས་"],"A genitive is hidden in the compound: child of the Victorious One."],
+  ["What number is སོ་བདུན་?",["37","27","47"],"སོ་ is the combining form for the thirties."]
+ ]},
+{id:"H",tab:"Homage",name:"The homage",
+ lines:[
+  [["གང་","gang","who (relative pronoun)"],["གིས་","gis","agentive: marks the one who sees and strives",P],["ཆོས་ཀུན་","chos kun","all phenomena"],["འགྲོ་འོང་","'gro 'ong","going and coming"],["མེད་","med","to be without"],["གཟིགས་","gzigs","to see (honorific)"],["ཀྱང༌","kyang","concessive: although",P]],
+  [["འགྲོ་བ","'gro ba","beings; literally, goers"],["འི་","'i","genitive: of",P],["དོན་","don","benefit"],["ལ་","la","la don: for",P],["གཅིག་ཏུ་","gcig tu","solely"],["བརྩོན་","brtson","to strive"],["མཛད་","mdzad","to do (honorific auxiliary)"],["པ","pa","nominaliser",P],["འི","'i","genitive: ties the whole clause to the nouns in the next line",P]],
+  [["བླ་མ་","bla ma","teacher"],["མཆོག་","mchog","supreme"],["དང་","dang","and",P],["སྤྱན་རས་གཟིགས་","spyan ras gzigs","Avalokiteśvara"],["མགོན་","mgon","protector"],["ལ","la","la don: to (the recipient of the homage)",P]],
+  [["རྟག་ཏུ་","rtag tu","always"],["སྒོ་གསུམ་","sgo gsum","the three doors: body, speech and mind"],["གུས་པ","gus pa","respect"],["ས་","-s","instrumental: with",P],["ཕྱག་འཚལ་","phyag 'tshal","to pay homage"],["ལོ","lo","final particle: closes the sentence",P]]
+ ],
+ tr:"To the supreme teacher and the protector Avalokiteśvara, who, although they see that all phenomena are without coming or going, strive solely for the benefit of beings, I always pay homage respectfully with the three doors.",
+ talk:[
+  ["Lines 1 and 2 are a single clause. What opens it, what closes it, and whom does it describe?","གང་གིས་ opens it and པའི་ closes it. It is a relative clause describing the teacher and Avalokiteśvara in line 3: the ones who see and yet strive. This construction returns in stanzas 5, 6 and 7."],
+  ["ཀྱང་ follows a verb here. What does it mean?","After a verb it is concessive: although. After a noun it means also or even (see stanza 6). Forms: ཀྱང་ after ག་ ད་ བ་ ས་; ཡང་ after ང་ ན་ མ་ ར་ ལ་; འང་ after a vowel."],
+  ["What has been left out between མེད་ and གཟིགས་?","པར་. In prose: འགྲོ་འོང་མེད་པར་གཟིགས་, sees that they are without coming and going. The object of གཟིགས་ is a whole clause."],
+  ["Who pays homage? How do we know?","The author. The agent is not expressed, which is normal in homages. The instrumental after སྒོ་གསུམ་ is also dropped: in prose, སྒོ་གསུམ་གྱིས་."]
+ ],
+ quiz:[
+  ["In གང་གིས་, what does གིས་ mark?",["The agent of གཟིགས་","The object of གཟིགས་","A possessor"],"གིས་ is the agentive: the one who sees and strives."],
+  ["What does པའི་ at the end of line 2 do?",["Closes a relative clause and ties it to the next nouns","Ends the sentence","Gives a reason"],"Nominaliser plus genitive: the teacher who strives."],
+  ["Which form of the concessive follows རང་?",["ཡང་","ཀྱང་","འང་"],"ཡང་ follows the suffixes ང་ ན་ མ་ ར་ ལ་."],
+  ["In མགོན་ལ་, what does ལ་ mark?",["The recipient of the homage","The agent","A comparison"],"Homage is paid to the protector."]
+ ]},
+{id:"P",tab:"Pledge",name:"The pledge to compose",
+ lines:[
+  [["ཕན་བདེ","phan bde","benefit and happiness"],["འི་","'i","genitive: of",P],["འབྱུང་གནས་","'byung gnas","source"],["རྫོགས་པ","rdzogs pa","perfect"],["འི་","'i","genitive",P],["སངས་རྒྱས་","sangs rgyas","buddha"],["རྣམས","rnams","plural marker",P]],
+  [["དམ་ཆོས་","dam chos","the sacred Dharma"],["སྒྲུབ་","sgrub","to accomplish (here used as a noun: accomplishing)"],["ལས་","las","source: from",P],["བྱུང་","byung","arose (past of འབྱུང་)"],["སྟེ་","ste","continuative: links to the next clause",P],["དེ་","de","that"],["ཡང་","yang","in turn, also",P],["ནི","ni","topic marker; also fills the line",P]],
+  [["དེ་","de","that (the Dharma)"],["ཡི་","yi","genitive, written as a full syllable",P],["ལག་ལེན་","lag len","practice"],["ཤེས་","shes","to know (used as a noun: knowing)"],["ལ་","la","la don: on",P],["རག་ལས་","rag las","to depend"],["པ","pa","nominaliser",P],["ས","-s","agentive: because",P]],
+  [["རྒྱལ་སྲས་","rgyal sras","bodhisattva"],["རྣམས་","rnams","plural marker",P],["ཀྱི་","kyi","genitive: of",P],["ལག་ལེན་","lag len","practice"],["བཤད་","bshad","to explain (future of འཆད་)"],["པ","pa","nominaliser",P],["ར་","-r","la don: joins the verbal noun to བྱ་",P],["བྱ","bya","shall do (future of བྱེད་)"]]
+ ],
+ tr:"The perfect buddhas, source of benefit and happiness, arise from accomplishing the sacred Dharma. Since that in turn depends on knowing how to practise it, I shall explain the practices of the bodhisattvas.",
+ talk:[
+  ["Line 1 has two noun phrases with no particle between them. How are they related?","Apposition: the perfect buddhas, who are the source of benefit and happiness. Together they are the subject of བྱུང་, an intransitive verb, so they carry no particle."],
+  ["What does པས་ at the end of line 3 express?","A reason. Nominaliser པ་ plus the agentive ས་ is the commonest way of saying because in this text. Watch for it in almost every stanza."],
+  ["Why བཤད་པར་བྱ་ and not simply འཆད་?","Verbal noun, ར་, and བྱ་ form a future that expresses commitment: I shall explain. It is the standard wording of an author's pledge."],
+  ["Why ཡི་ instead of འི་ in line 3?","For the metre. Every line has nine syllables; ཡི་ counts as one, འི་ does not. The same happens with ཡིས་ for འིས་."]
+ ],
+ quiz:[
+  ["In སྒྲུབ་ལས་བྱུང་, what does ལས་ mean?",["from","than","by"],"Source particle: the buddhas arise from accomplishing."],
+  ["Which continuative follows ཡིན་?",["ཏེ་","སྟེ་","དེ་"],"ཏེ་ after ན་ ར་ ལ་ ས་; དེ་ after ད་; སྟེ་ after the rest."],
+  ["How is རག་ལས་པས་ best translated?",["because it depends","although it depends","in order to depend"],"པས་ gives the reason."],
+  ["What does བཤད་པར་བྱ་ mean?",["I shall explain","I explained","Do not explain"],"Future of commitment."]
+ ]},
+{id:"1",tab:"1",name:"Stanza 1",
+ lines:[
+  [["དལ་འབྱོར་","dal 'byor","freedoms and advantages"],["གྲུ་ཆེན་","gru chen","great ship"],["རྙེད་དཀའ་","rnyed dka'","hard to find"],["ཐོབ་","thob","to obtain"],["དུས་","dus","time"],["འདི","'di","this"],["ར","-r","la don: at",P]],
+  [["བདག་གཞན་","bdag gzhan","self and others"],["འཁོར་བ","'khor ba","saṃsāra"],["འི་","'i","genitive: of",P],["མཚོ་","mtsho","ocean"],["ལས་","las","source: from",P],["བསྒྲལ་","bsgral","to free, to ferry across (future of སྒྲོལ་)"],["བྱ","bya","to be done (future of བྱེད་)"],["འི་","'i","genitive, required by ཕྱིར་",P],["ཕྱིར","phyir","in order to"]],
+  [["ཉིན་","nyin","day"],["དང་","dang","and",P],["མཚན་","mtshan","night"],["དུ་","du","la don: time",P],["གཡེལ་བ་","g.yel ba","distraction"],["མེད་པ","med pa","absence; without"],["ར་","-r","la don: makes an adverb",P],["ནི","ni","emphasis; fills the line",P]],
+  [["ཉན་","nyan","to listen"],["བསམ་","bsam","to reflect"],["སྒོམ་","sgom","to meditate"],["པ་","pa","nominaliser: makes the three verbs into one noun phrase",P]].concat(REFRAIN)
+ ],
+ tr:"At this time when the great ship of freedoms and advantages, so hard to find, has been obtained, to listen, reflect and meditate day and night without distraction, in order to free oneself and others from the ocean of saṃsāra, is the practice of the bodhisattvas.",
+ talk:[
+  ["There are two metaphors: དལ་འབྱོར་གྲུ་ཆེན་ and འཁོར་བའི་མཚོ་. How do they differ grammatically?","The first is an apposition with no particle: the great ship that is the freedoms and advantages. The second uses the genitive: the ocean of saṃsāra. Both are common ways of building a metaphor."],
+  ["What does the single པ་ in line 4 do?","It nominalises all three verbs together. ཉན་བསམ་སྒོམ་པ་ is then the subject of ཡིན་. Every stanza ends this way: [doing X] is the practice of the bodhisattvas."],
+  ["How does བསྒྲལ་བྱའི་ཕྱིར་ express purpose?","Future stem plus བྱ་ gives what is to be freed; the genitive and ཕྱིར་ add in order to."],
+  ["What does ར་ add in མེད་པར་?","It turns absence of distraction into an adverb: without distraction."]
+ ],
+ quiz:[
+  ["What is the subject of ཡིན་?",["ཉན་བསམ་སྒོམ་པ་","རྒྱལ་སྲས་","དལ་འབྱོར་"],"The nominalised verbs are what is the practice."],
+  ["What does འཁོར་བའི་མཚོ་ལས་ mean?",["from the ocean of saṃsāra","in the ocean of saṃsāra","than the ocean of saṃsāra"],"ལས་ is the source particle here."],
+  ["Which stem of སྒྲོལ་ is བསྒྲལ་ here?",["future","present","imperative"],"With བྱ་ it is the future: to be freed."],
+  ["In ཉིན་དང་མཚན་དུ་, what does དུ་ mark?",["time","the agent","the source"],"By day and by night."]
+ ]},
+{id:"2",tab:"2",name:"Stanza 2",
+ lines:[
+  [["གཉེན་","gnyen","relatives, friends"],["གྱི་","gyi","genitive: of",P],["ཕྱོགས་","phyogs","side"],["ལ་","la","la don: towards",P],["འདོད་ཆགས་","'dod chags","attachment"],["ཆུ་","chu","water"],["ལྟར་","ltar","like",P],["གཡོ","g.yo","stirs, wavers"]],
+  [["དགྲ་","dgra","enemy"],["ཡི་","yi","genitive, written as a full syllable",P],["ཕྱོགས་","phyogs","side"],["ལ་","la","la don: towards",P],["ཞེ་སྡང་","zhe sdang","hatred"],["མེ་","me","fire"],["ལྟར་","ltar","like",P],["འབར","'bar","blazes"]],
+  [["བླང་དོར་","blang dor","what to adopt and what to reject"],["བརྗེད་","brjed","to forget"],["པ","pa","nominaliser",P],["འི་","'i","genitive: ties the clause to གཏི་མུག་",P],["གཏི་མུག་","gti mug","delusion"],["མུན་ནག་","mun nag","darkness"],["ཅན","can","having",P]],
+  [["ཕ་ཡུལ་","pha yul","homeland"],["སྤོང་","spong","to abandon"],["བ་","ba","nominaliser",P]].concat(REFRAIN)
+ ],
+ tr:"Attachment towards friends stirs like water; hatred towards enemies blazes like fire; there is the darkness of delusion that forgets what to adopt and what to reject. To leave one's homeland is the practice of the bodhisattvas.",
+ talk:[
+  ["Lines 1 and 2 are built the same way. Name each slot.","[person] + genitive + ཕྱོགས་ལ་ + [affliction] + [image] ལྟར་ + verb. Reading in slots like this makes parallel lines quick to parse."],
+  ["བླང་ and དོར་ are verbs. Why can they stand as nouns?","They are future stems (of ལེན་ and འདོར་). A future stem can mean what is to be done: what is to be adopted, what is to be rejected."],
+  ["How do lines 1 to 3 relate to ཕ་ཡུལ་?","They describe it: the homeland is where attachment stirs, hatred blazes and delusion darkens. Lines 1 and 2 can also be read as independent sentences. Discuss which reading the class prefers."],
+  ["Why སྤོང་བ་ here but སྒོམ་པ་ in stanza 1?","བ་ follows the suffixes ང་ འ་ ར་ ལ་ and vowels; པ་ follows the others."]
+ ],
+ quiz:[
+  ["Which genitive follows གཉེན་?",["གྱི་","ཀྱི་","གི་"],"གྱི་ follows ན་ མ་ ར་ ལ་."],
+  ["What does ཆུ་ལྟར་ mean?",["like water","in water","from water"],"ལྟར་ makes a comparison."],
+  ["What does བརྗེད་པའི་གཏི་མུག་ mean?",["the delusion that forgets","forgetting because of delusion","delusion is forgotten"],"A relative clause with པའི་ before its noun."],
+  ["Which nominaliser follows འབར་?",["བ་","པ་"],"བ་ after the suffix ར་."]
+ ]},
+{id:"3",tab:"3",name:"Stanza 3",
+ lines:[
+  [["ཡུལ་ངན་","yul ngan","bad place"],["སྤངས་","spangs","abandoned (past of སྤོང་)"],["པ","pa","nominaliser",P],["ས་","-s","agentive: because",P],["ཉོན་མོངས་","nyon mongs","afflictions"],["རིམ་གྱིས་","rim gyis","gradually"],["འགྲིབ","'grib","diminish"]],
+  [["རྣམ་གཡེང་","rnam g.yeng","distraction"],["མེད་པ","med pa","absence"],["ས་","-s","agentive: because",P],["དགེ་སྦྱོར་","dge sbyor","virtuous practice"],["ངང་གིས་","ngang gis","naturally, of itself"],["འཕེལ","'phel","increases"]],
+  [["རིག་པ་","rig pa","awareness"],["དྭངས་","dwangs","to be clear"],["པ","pa","nominaliser",P],["ས་","-s","agentive: because",P],["ཆོས་","chos","the Dharma"],["ལ་","la","la don: about",P],["ངེས་ཤེས་","nges shes","certainty"],["སྐྱེ","skye","is born, arises"]],
+  [["དབེན་པ་","dben pa","solitude"],["བསྟེན་","bsten","to keep to, to rely on"],["པ་","pa","nominaliser",P]].concat(REFRAIN)
+ ],
+ tr:"Because bad places have been left behind, afflictions gradually diminish; because there is no distraction, virtuous practice grows of itself; because awareness is clear, certainty about the Dharma is born. To keep to solitude is the practice of the bodhisattvas.",
+ talk:[
+  ["Lines 1 to 3 share one pattern. Find the cause and the result in each.","[cause] + པས་, then [subject] + [adverb] + verb. Leaving bad places, so afflictions diminish; no distraction, so practice grows; clear awareness, so certainty arises."],
+  ["སྤངས་ here, སྤོང་ in stanza 2. What changes?","སྤངས་ is the past stem: the leaving has already happened and is the cause. སྤོང་ is the present stem, naming the practice in general."],
+  ["In རིམ་གྱིས་ and ངང་གིས་, is anyone the agent?","No. Here the agentive makes adverbs of manner: gradually, naturally."],
+  ["Why do ཉོན་མོངས་, དགེ་སྦྱོར་ and ངེས་ཤེས་ carry no particle?","They are subjects of intransitive verbs (འགྲིབ་, འཕེལ་, སྐྱེ་). Only the agent of a transitive verb takes the agentive."]
+ ],
+ quiz:[
+  ["What does པས་ express in སྤངས་པས་?",["a reason","a comparison","a place"],"Nominaliser plus agentive: because."],
+  ["Which stem is སྤངས་?",["past of སྤོང་","future of སྤོང་","imperative of སྤོང་"],"སྤོང་, སྤངས་, སྤང་, སྤོངས་."],
+  ["What is རིམ་གྱིས་?",["an adverb: gradually","an agent","a genitive phrase"],"The agentive can form adverbs."],
+  ["What does ཆོས་ལ་ངེས་ཤེས་ mean?",["certainty about the Dharma","certainty from the Dharma","the Dharma's certainty"],"ལ་ of reference."]
+ ]},
+{id:"4",tab:"4",name:"Stanza 4",
+ lines:[
+  [["ཡུན་རིང་","yun ring","a long time"],["འགྲོགས་","'grogs","to keep company with"],["པ","pa","nominaliser",P],["འི་","'i","genitive: ties the clause to མཛའ་བཤེས་",P],["མཛའ་བཤེས་","mdza' bshes","loved ones, close friends"],["སོ་སོ","so so","each separately"],["ར་","-r","la don: makes an adverb",P],["འབྲལ","'bral","part, are separated"]],
+  [["འབད་པ","'bad pa","effort"],["ས་","-s","instrumental: with",P],["སྒྲུབ་","sgrub","to acquire"],["པ","pa","nominaliser",P],["འི་","'i","genitive: ties the clause to ནོར་རྫས་",P],["ནོར་རྫས་","nor rdzas","wealth and possessions"],["ཤུལ་","shul","what is left behind"],["དུ་","du","la don: place",P],["ལུས","lus","remains, is left (verb)"]],
+  [["ལུས་","lus","body (noun)"],["ཀྱི་","kyi","genitive: of",P],["མགྲོན་ཁང་","mgron khang","guesthouse"],["རྣམ་ཤེས་","rnam shes","consciousness"],["མགྲོན་པོ","mgron po","guest"],["ས་","-s","agentive: marks the guest as the one who leaves",P],["བོར","bor","abandoned (past of འབོར་)"]],
+  [["ཚེ་འདི་","tshe 'di","this life"],["བློ","blo","mind"],["ས་","-s","agentive: by",P],["བཏང་","btang","let go (past of གཏོང་)"]].concat(REFRAIN)
+ ],
+ tr:"Loved ones long kept company with will go their separate ways; wealth gathered with effort will be left behind; the guest, consciousness, will leave the guesthouse of the body. To let go of this life is the practice of the bodhisattvas.",
+ talk:[
+  ["In line 3, who leaves what? How do you know?","The guest leaves the guesthouse. The agentive ས་ on མགྲོན་པོ་ marks the agent, even though the object comes first in the line. Particles, not word order, show who does what."],
+  ["འབད་པས་ here and སྤངས་པས་ in stanza 3 look alike. Are they the same?","No. འབད་པ་ is already a noun, so ས་ is instrumental: with effort. In སྤངས་པས་, པ་ nominalises a verb and ས་ gives the reason."],
+  ["ལུས་ ends line 2 and begins line 3. Is it the same word?","No: first the verb to remain, then the noun body. The echo is deliberate."],
+  ["What is missing after བཏང་?","The nominaliser བ་. In prose: ཚེ་འདི་བློས་བཏང་བ་. The metre leaves no room for it."]
+ ],
+ quiz:[
+  ["Who is the agent in line 3?",["རྣམ་ཤེས་མགྲོན་པོ་","མགྲོན་ཁང་","ལུས་"],"The agentive ས་ is on མགྲོན་པོ་."],
+  ["What does ཤུལ་དུ་ལུས་ mean?",["is left behind","leaves the body","follows behind"],"ལུས་ is here the verb to remain."],
+  ["བོར་ is the past stem of which verb?",["འབོར་","འབར་","བྱེད་"],"འབོར་, to abandon, to cast away."],
+  ["What does འགྲོགས་པའི་མཛའ་བཤེས་ mean?",["loved ones one has kept company with","keeping company because of loved ones","the company of loved ones"],"A relative clause before its noun."]
+ ]},
+{id:"5",tab:"5",name:"Stanza 5",
+ lines:[
+  [["གང་","gang","whom, whoever"],["དང་","dang","with (required by འགྲོགས་)",P],["འགྲོགས་","'grogs","to keep company"],["ན་","na","conditional: if",P],["དུག་གསུམ་","dug gsum","the three poisons"],["འཕེལ་","'phel","to increase"],["འགྱུར་","'gyur","come to (auxiliary: it happens by itself)"],["ཞིང༌","zhing","and (joins clauses)",P]],
+  [["ཐོས་","thos","to hear"],["བསམ་","bsam","to reflect"],["སྒོམ་","sgom","to meditate"],["པ","pa","nominaliser",P],["འི་","'i","genitive: of",P],["བྱ་བ་","bya ba","activity"],["ཉམས་","nyams","to decline"],["འགྱུར་","'gyur","come to (auxiliary)"],["ལ","la","and (joins clauses)",P]],
+  [["བྱམས་","byams","love"],["དང་","dang","and",P],["སྙིང་རྗེ་","snying rje","compassion"],["མེད་པ","med pa","nothing, non-existent"],["ར་","-r","la don: into",P],["སྒྱུར་","sgyur","to turn, to transform (transitive)"],["བྱེད་","byed","to do (auxiliary: someone causes it)"],["པ","pa","nominaliser",P],["འི","'i","genitive: ties the whole clause to གྲོགས་ངན་",P]],
+  [["གྲོགས་ངན་","grogs ngan","bad companion"],["སྤོང་","spong","to abandon"],["བ་","ba","nominaliser",P]].concat(REFRAIN)
+ ],
+ tr:"To give up bad companions, in whose company the three poisons increase, the activities of hearing, reflecting and meditating decline, and love and compassion are brought to nothing, is the practice of the bodhisattvas.",
+ talk:[
+  ["The whole stanza is one sentence. Where is the head noun of the relative clause?","གྲོགས་ངན་ in line 4. Lines 1 to 3 open with གང་ and close with པའི་, exactly as in the homage."],
+  ["What is the difference between འགྱུར་ and སྒྱུར་?","They are a pair: འགྱུར་ is intransitive (something changes), སྒྱུར་ is transitive (someone changes something). Many Tibetan verbs come in such pairs."],
+  ["ན་ follows a verb here. What changes when it follows a noun?","After a verb it is conditional: if, when. After a noun it marks place or time: in, at."],
+  ["Three different words for and appear. Find them.","དང་ joins nouns (བྱམས་དང་སྙིང་རྗེ་). ཞིང་ and ལ་ join clauses, at the ends of lines 1 and 2."]
+ ],
+ quiz:[
+  ["With which particle does འགྲོགས་ take its complement?",["དང་","ལ་","ལས་"],"To keep company with someone."],
+  ["What does འགྲོགས་ན་ mean?",["if one keeps company","because one keeps company","although one keeps company"],"ན་ after a verb is conditional."],
+  ["Which of these verbs is transitive?",["སྒྱུར་","འགྱུར་","འཕེལ་"],"སྒྱུར་: someone transforms something."],
+  ["Which coordinating particle follows འགྱུར་?",["ཞིང་","ཅིང་","ཤིང་"],"ཞིང་ after ང་ ན་ མ་ འ་ ར་ ལ་ and vowels."]
+ ]},
+{id:"6",tab:"6",name:"Stanza 6",
+ lines:[
+  [["གང་ཞིག་","gang zhig","whoever, someone whom"],["བསྟེན་","bsten","to rely on"],["ན་","na","conditional: if",P],["ཉེས་པ་","nyes pa","faults"],["ཟད་","zad","to come to an end"],["འགྱུར་","'gyur","come to (auxiliary)"],["ཞིང༌","zhing","and (joins clauses)",P]],
+  [["ཡོན་ཏན་","yon tan","good qualities"],["ཡར་ངོ","yar ngo","the waxing half of the month"],["འི་","'i","genitive: of",P],["ཟླ་","zla","moon"],["ལྟར་","ltar","like",P],["འཕེལ་","'phel","to increase"],["འགྱུར་","'gyur","come to (auxiliary)"],["བ","ba","nominaliser",P],["འི","'i","genitive: ties the whole clause to བཤེས་གཉེན་",P]],
+  [["བཤེས་གཉེན་","bshes gnyen","spiritual friend"],["དམ་པ་","dam pa","true, sacred"],["རང་","rang","oneself"],["གི་","gi","genitive: of",P],["ལུས་","lus","body"],["ལས་","las","comparison: than",P],["ཀྱང༌","kyang","even",P]],
+  [["གཅེས་པ","gces pa","dear, precious"],["ར་","-r","la don: as",P],["འཛིན་","'dzin","to hold"],["པ་","pa","nominaliser",P]].concat(REFRAIN)
+ ],
+ tr:"To hold dearer than even one's own body the true spiritual friend, relying on whom faults come to an end and good qualities grow like the waxing moon, is the practice of the bodhisattvas.",
+ talk:[
+  ["Compare this stanza with stanza 5, line by line. What is kept and what is reversed?","The frame is the same: གང་ ... ན་ ... འགྱུར་ཞིང་ ... པའི་ + head noun. The content is reversed: bad companion and spiritual friend, increase of poisons and exhaustion of faults, abandoning and cherishing."],
+  ["ལས་ meant from in stanza 1. What does it mean here?","Than. The source particle is also the particle of comparison: dearer than one's body."],
+  ["ཀྱང་ meant although in the homage. And here?","Even. After a noun phrase ཀྱང་ is inclusive: even more than one's own body."],
+  ["What does ར་ do in གཅེས་པར་འཛིན་?","It marks the role in which something is held: to hold as dear."]
+ ],
+ quiz:[
+  ["What does ལུས་ལས་ཀྱང་ mean?",["even more than the body","also from the body","although the body"],"ལས་ of comparison, ཀྱང་ meaning even."],
+  ["What does ཡར་ངོའི་ཟླ་ལྟར་ mean?",["like the waxing moon","in the waxing moon","the waxing of the moon"],"Genitive, then ལྟར་ of comparison."],
+  ["What is the head noun of the relative clause?",["བཤེས་གཉེན་དམ་པ་","ཡོན་ཏན་","ཉེས་པ་"],"The clause closed by བའི་ describes the spiritual friend."],
+  ["Which nominaliser follows འགྱུར་?",["བ་","པ་"],"བ་ after the suffix ར་."]
+ ]},
+{id:"7",tab:"7",name:"Stanza 7",
+ lines:[
+  [["རང་","rang","themselves"],["ཡང་","yang","also",P],["འཁོར་བ","'khor ba","saṃsāra"],["འི་","'i","genitive: of",P],["བཙོན་ར","btson ra","prison"],["ར་","-r","la don: in",P],["བཅིངས་","bcings","bound (past of འཆིང་)"],["པ་","pa","nominaliser",P],["ཡིས","yis","agentive, written as a full syllable",P]],
+  [["འཇིག་རྟེན་","'jig rten","world"],["ལྷ་","lha","god"],["ཡིས་","yis","agentive: marks the gods as the agent of སྐྱོབ་",P],["སུ་ཞིག་","su zhig","whom"],["སྐྱོབ་","skyob","to protect"],["པ","pa","nominaliser",P],["ར་","-r","la don: joins the verb to ནུས་",P],["ནུས","nus","to be able"]],
+  [["དེ་ཕྱིར་","de phyir","therefore"],["གང་","gang","whom"],["ལ་","la","la don: in",P],["སྐྱབས་","skyabs","to take refuge"],["ན་","na","conditional: if, when",P],["མི་","mi","negation: not",P],["བསླུ་","bslu","to deceive, to fail"],["བ","ba","nominaliser",P],["འི","'i","genitive: ties the clause to དཀོན་མཆོག་",P]],
+  [["དཀོན་མཆོག་","dkon mchog","the Three Jewels"],["སྐྱབས་འགྲོ་","skyabs 'gro","going for refuge"]].concat(REFRAIN)
+ ],
+ tr:"Themselves bound in the prison of saṃsāra, whom can the worldly gods protect? Therefore, to go for refuge to the Three Jewels, who never fail those who take refuge in them, is the practice of the bodhisattvas.",
+ talk:[
+  ["There are two agentives in lines 1 and 2. How are they related?","Both mark the same agent. The first phrase qualifies the second: by the worldly gods, who are themselves bound. It can also be read as a reason: since they are themselves bound."],
+  ["Line 2 is a question. Which word shows it, and what answer is expected?","The interrogative སུ་. The question is rhetorical: no one. Note also V-པར་ནུས་, able to V."],
+  ["Write the first four syllables of line 4 in prose.","དཀོན་མཆོག་ལ་སྐྱབས་སུ་འགྲོ་བ་. Three particles are dropped, and the phrase works as a single noun."],
+  ["Why མི་ and not མ་ before བསླུ་?","མི་ negates present and future stems; མ་ negates past stems and imperatives."]
+ ],
+ quiz:[
+  ["What does སུ་ཞིག་སྐྱོབ་པར་ནུས་ mean?",["whom can they protect?","who protects them?","they can protect anyone"],"A rhetorical question with སུ་."],
+  ["What does བཙོན་རར་ mean?",["in the prison","from the prison","of the prison"],"ར་ marks place."],
+  ["What does མི་ negate?",["present and future stems","past stems only","nouns"],"མ་ is used with past stems and imperatives."],
+  ["What is དེ་ཕྱིར་ short for?",["དེའི་ཕྱིར་","དེ་ལ་ཕྱིར་","དེ་ནས་ཕྱིར་"],"For that reason: therefore."]
+ ]}
+];
+
+
+var NEW=[];
+NEW.push({id:"8",name:"Stanza 8",L:[
+"ཤིན་ཏུ་|shin tu|extremely;བཟོད་དཀའི་|bzod dka'i|hard to bear (བཟོད་དཀའ་ with the genitive འི་ fused to it);ངན་སོང་|ngan song|the lower realms;སྡུག་བསྔལ་|sdug bsngal|suffering;=རྣམས|p",
+"སྡིག་པ|sdig pa|evil, negative deed;=འི་|g;ལས་|las|action (a noun here, Skt. karman);=ཀྱི་|g;འབྲས་བུ|'bras bu|fruit, result;=ར་|l|as;ཐུབ་པ|thub pa|the Sage (the Buddha);=ས་|a;གསུངས|gsungs|said, taught (honorific)",
+"དེ་ཕྱིར་;སྲོག་|srog|life;=ལ་|l|at, upon;བབ་|bab|came down to, reached (past of འབབ་);=ཀྱང་|x|even if;སྡིག་པ;=འི་|g;ལས",
+"ནམ་ཡང་|nam yang|ever (with a negation: never);=མི་|z;བྱེད་|byed|to do~"],
+tr:"The Sage has taught that the unbearable sufferings of the lower realms are the fruit of evil actions. Therefore, never to commit evil actions, even at the cost of one's life, is the practice of the bodhisattvas.",
+tk:["ལས་ is a noun here. How do you tell it from the particle ལས་?","By what surrounds it. The noun is qualified (སྡིག་པའི་ལས་) and takes particles of its own (ལས་ཀྱི་). The particle follows a noun or verb and nothing can be attached to it.",
+"What is the pattern X Y-ར་གསུངས་?","To declare X to be Y. འབྲས་བུར་ carries the la don: the sufferings are taught as the fruit. ཐུབ་པས་ is the agent.",
+"What does སྲོག་ལ་བབ་ཀྱང་ say literally?","Even if it comes down to one's life: an idiom for at the cost of one's life. ཀྱང་ after a verb is concessive, as in the homage."],
+qz:["In ཐུབ་པས་གསུངས་, what does ས་ mark?","the agent of གསུངས་","a reason","a place","The Sage is the one who taught.",
+"What does ནམ་ཡང་མི་བྱེད་ mean?","never to do","always to do","not to do now","ནམ་ཡང་ with a negation means never.",
+"In འབྲས་བུར་, what does ར་ express?","as: what something is declared to be","from","because","Taught to be the fruit."]});
+NEW.push({id:"9",name:"Stanza 9",L:[
+"སྲིད་གསུམ་|srid gsum|the three worlds of existence;བདེ་བ་|bde ba|happiness;རྩྭ་རྩེ|rtswa rtse|tip of a blade of grass;=འི་|g;ཟིལ་པ་|zil pa|dewdrop;=བཞིན|m",
+"ཡུད་ཙམ་|yud tsam|a mere instant;ཞིག་|zhig|a, one (indefinite);=གིས་|i|in, within;འཇིག་|'jig|to perish;=པ|n;=འི་|g;ཆོས་ཅན་|chos can|having the nature of;ཡིན|yin|is",
+"ནམ་ཡང་;=མི་|z;འགྱུར་|'gyur|to change;ཐར་པ|thar pa|liberation;=འི་|g;གོ་འཕང་|go 'phang|state, level;མཆོག|mchog|supreme",
+"དོན་དུ་གཉེར་|don du gnyer|to strive for, to seek;=བ་|n~"],
+tr:"The happiness of the three worlds is like a dewdrop on the tip of a blade of grass: by its nature it perishes in a mere instant. To strive for the supreme state of liberation, which never changes, is the practice of the bodhisattvas.",
+tk:["Lines 1 and 2 are a complete sentence. What is its subject and what is said about it?","The subject is སྲིད་གསུམ་བདེ་བ་. The predicate is འཇིག་པའི་ཆོས་ཅན་ཡིན་: it is something that has the property (ཆོས་) of perishing.",
+"ནམ་ཡང་མི་འགྱུར་ stands before ཐར་པའི་གོ་འཕང་ with no པའི་. How is it attached?","It is a relative clause whose བའི་ is dropped for the metre. In prose: ནམ་ཡང་མི་འགྱུར་བའི་ཐར་པའི་གོ་འཕང་.",
+"བཞིན་ and ལྟར་: is there a difference?","Both follow a noun and mean like. བཞིན་ can also mean in accordance with, and with དུ་ after a verb it means while (see stanza 13)."],
+qz:["What does རྩྭ་རྩེའི་ཟིལ་པ་བཞིན་ mean?","like a dewdrop on the tip of a blade of grass","from a dewdrop on the grass","the grass of the dewdrop","བཞིན་ makes a comparison.",
+"How would ནམ་ཡང་མི་འགྱུར་ཐར་པ་ read in prose?","མི་འགྱུར་བའི་ཐར་པ་","མི་འགྱུར་བས་ཐར་པ་","མི་འགྱུར་བར་ཐར་པ་","A relative clause needs the nominaliser and the genitive.",
+"What is the object of དོན་དུ་གཉེར་?","ཐར་པའི་གོ་འཕང་མཆོག་","སྲིད་གསུམ་བདེ་བ་","ཟིལ་པ་","One strives for the supreme state of liberation."]});
+NEW.push({id:"10",name:"Stanza 10",L:[
+"ཐོག་མེད་|thog med|beginningless;དུས་|dus|time;=ནས་|s|since;བདག་|bdag|me, oneself;=ལ་|l|towards;བརྩེ་བ་|brtse ba|love, tenderness;=ཅན|o|having",
+"མ་|ma|mother;=རྣམས་|p;སྡུག་|sdug|to suffer;=ན་|d;རང་བདེ|rang bde|one's own happiness;=ས་|i;ཅི་ཞིག་|ci zhig|what;བྱ|bya|to be done (future of བྱེད་)",
+"དེ་ཕྱིར་;མཐའ་ཡས་|mtha' yas|limitless;སེམས་ཅན་|sems can|sentient beings;བསྒྲལ་|bsgral|to free (future of སྒྲོལ་);བྱ;=འི་|g;ཕྱིར|phyir|in order to",
+"བྱང་ཆུབ་|byang chub|awakening (Skt. bodhi);སེམས་|sems|mind;བསྐྱེད་|bskyed|to give rise to (stem of སྐྱེད་)~"],
+tr:"If my mothers, who have loved me since beginningless time, are suffering, what use is my own happiness? Therefore, to give rise to the mind of awakening in order to free limitless beings is the practice of the bodhisattvas.",
+tk:["Translate རང་བདེས་ཅི་ཞིག་བྱ་ literally.","With one's own happiness, what is to be done? Instrumental plus ཅི་ཞིག་བྱ་ is the idiom for what is the use of X.",
+"Line 1 has no པའི་ before མ་རྣམས་. How is it linked?","བརྩེ་བ་ཅན་, those who have love, stands in apposition to མ་རྣམས་ across the line break.",
+"ནས་ and ལས་ both mean from. When is ནས་ preferred?","ནས་ for a starting point in time or space (since, from here). ལས་ for origin or source, and only ལས་ for comparison.",
+"Restore the prose form of བྱང་ཆུབ་སེམས་བསྐྱེད་.","བྱང་ཆུབ་ཀྱི་སེམས་བསྐྱེད་པ་: a genitive and the nominaliser are dropped."],
+qz:["What does དུས་ནས་ mean in line 1?","since the time","at the time","than the time","ནས་ marks the starting point.",
+"What is རང་བདེས་ཅི་ཞིག་བྱ་?","a rhetorical question: what use is my own happiness?","a command: make yourself happy","a statement: happiness has been achieved","Instrumental plus ཅི་ཞིག་བྱ་.",
+"What does བསྒྲལ་བྱའི་ཕྱིར་ express?","purpose","a past cause","a comparison","As in stanza 1: in order to free."]});
+NEW.push({id:"11",name:"Stanza 11",L:[
+"སྡུག་བསྔལ་;མ་ལུས་|ma lus|without exception, all;བདག་བདེ་|bdag bde|one's own happiness;འདོད་|'dod|to want (here: wanting);=ལས་|s;བྱུང༌|byung|arose (past of འབྱུང་)",
+"རྫོགས་པ|rdzogs pa|perfect;=འི་|g;སངས་རྒྱས་;གཞན་ཕན་|gzhan phan|the benefit of others;སེམས་|sems|mind, intention;=ལས་|s;འཁྲུངས|'khrungs|are born (honorific)",
+"དེ་ཕྱིར་;བདག་བདེ་;གཞན་|gzhan|others;=གྱི་|g;སྡུག་བསྔལ་;=དག|p",
+"ཡང་དག་|yang dag|truly, genuinely;བརྗེ་|brje|to exchange;=བ་|n~"],
+tr:"All suffering without exception arises from wanting happiness for oneself; the perfect buddhas are born from the intention to benefit others. Therefore, truly to exchange one's own happiness for the suffering of others is the practice of the bodhisattvas.",
+tk:["Lines 1 and 2 are parallel. Which words answer each other?","སྡུག་བསྔལ་ and སངས་རྒྱས་; བདག་བདེ་འདོད་ and གཞན་ཕན་སེམས་; བྱུང་ and its honorific counterpart འཁྲུངས་, used because the subject is the buddhas.",
+"Restore the prose form of བདག་བདེ་འདོད་ལས་.","བདག་བདེ་བར་འདོད་པ་ལས་. A bare verb stem serves as a noun, as in སྒྲུབ་ལས་ in the pledge.",
+"The two objects of བརྗེ་ have no particle between them. What would prose add?","དང་: བདག་གི་བདེ་བ་དང་གཞན་གྱི་སྡུག་བསྔལ་. The verb བརྗེ་ takes X དང་ Y, to exchange X with Y."],
+qz:["Which verb is honorific?","འཁྲུངས་","བྱུང་","བརྗེ་","འཁྲུངས་ is the honorific for to be born.",
+"What does མ་ལུས་ mean literally?","not left over, that is: all","the mother's body","not yet","མ་ negates ལུས་, to remain.",
+"In གཞན་ཕན་སེམས་ལས་, what does ལས་ mark?","the source","a comparison","the agent","Born from the intention to benefit others."]});
+NEW.push({id:"12",name:"Stanza 12",L:[
+"སུ་དག་|su dag|whoever, someone;འདོད་ཆེན་|'dod chen|great desire;དབང་|dbang|power, force;=གིས་|i|through;བདག་;=གི་|g;ནོར|nor|wealth",
+"ཐམས་ཅད་|thams cad|all;འཕྲོག་|'phrog|to rob, to seize;=གམ་|o|or (alternative particle);འཕྲོག་;=ཏུ་|l|joins the verb to འཇུག་;འཇུག་|'jug|to cause, to have someone do;=ན་|d;=ཡང༌|x|even (with ན་: even if)",
+"ལུས་|lus|body;=དང་|j;ལོངས་སྤྱོད་|longs spyod|possessions;དུས་གསུམ་|dus gsum|the three times;དགེ་བ་|dge ba|virtue, merit;=རྣམས|p",
+"དེ་|de|that person;=ལ་|l|to;བསྔོ་|bsngo|to dedicate;=བ་|n~"],
+tr:"Even if someone, driven by great desire, steals all my wealth or has others steal it, to dedicate to that person my body, my possessions and my virtue of the three times is the practice of the bodhisattvas.",
+tk:["What does the construction V-ཏུ་འཇུག་ mean?","To make or let someone V. འཕྲོག་ཏུ་འཇུག་: to have someone rob. This is the regular causative.",
+"What is གམ་ after འཕྲོག་, and how is its form chosen?","The alternative particle, or. Like the final particle, it copies the preceding suffix: གམ་ ངམ་ དམ་ ནམ་ བམ་ མམ་ རམ་ ལམ་ སམ་, and འམ་ after a vowel.",
+"What do ན་ and ཡང་ mean together?","Even if. Stanzas 12 to 17 all turn on ན་ཡང་: even if someone does this harm, respond in this way.",
+"སུ་དག་ has no agentive. Should it?","In prose it would: སུ་དག་གིས་, as agent of འཕྲོག་. Verse drops it."],
+qz:["What does འཕྲོག་ཏུ་འཇུག་ mean?","to make someone rob","to begin to rob","to be robbed","V-ཏུ་འཇུག་ is causative.",
+"What does ན་ཡང་ mean?","even if","because","as soon as","Conditional plus inclusive.",
+"In དེ་ལ་བསྔོ་, what does ལ་ mark?","the one to whom it is dedicated","the agent","the thing dedicated","Dedicate to that person.",
+"Which alternative particle follows ཡིན་?","ནམ་","གམ་","འམ་","It copies the suffix ན་."]});
+NEW.push({id:"13",name:"Stanza 13",L:[
+"བདག་;=ལ་|l|marks the possessor: I have;ཉེས་པ་|nyes pa|fault;ཅུང་ཟད་|cung zad|the slightest;མེད་|med|not to have;བཞིན་དུ|bzhin du|while, although",
+"གང་དག་|gang dag|whoever, someone;བདག་;=གི་|g;མགོ་བོ་|mgo bo|head;གཅོད་|gcod|to cut;བྱེད་|byed|to do (auxiliary);=ན|d",
+"སྙིང་རྗེ|snying rje|compassion;=འི་|g;དབང་;=གིས་|i|through;དེ་;=ཡི་|g;སྡིག་པ་|sdig pa|evil deeds;=རྣམས|p",
+"བདག་;=ལ་|l|upon;ལེན་|len|to take;=པ་|n~"],
+tr:"Even though I have not the slightest fault, if someone should cut off my head, to take that person's evil deeds upon myself through the power of compassion is the practice of the bodhisattvas.",
+tk:["How does Tibetan say I have and I do not have?","Possessor + ལ་ + thing + ཡོད་ or མེད་. བདག་ལ་ཉེས་པ་མེད་: to me there is no fault.",
+"What does བཞིན་དུ་ mean after a verb?","While V-ing, and here, with contrast, although. Compare བཞིན་ after a noun in stanza 9: like.",
+"X-འི་དབང་གིས་ occurs in stanzas 12, 13, 17, 32 and 33. What does it mean?","By the power of X: the standard way to say under the influence of, because of."],
+qz:["What does བདག་ལ་ཉེས་པ་མེད་ mean?","I have no fault","I am the fault","I do not see the fault","Possessor + ལ་ + thing + མེད་.",
+"What does སྙིང་རྗེའི་དབང་གིས་ mean?","through the power of compassion","the power that compassion has lost","for the sake of compassion","Genitive, then instrumental.",
+"In མེད་བཞིན་དུ་, what does བཞིན་དུ་ mean?","while, although","like","because","After a verb བཞིན་དུ་ means while."]});
+NEW.push({id:"14",name:"Stanza 14",L:[
+"འགའ་ཞིག་|'ga' zhig|someone, some;བདག་;=ལ་|l|about, against;མི་སྙན་|mi snyan|unpleasant words;སྣ་ཚོགས་པ|sna tshogs pa|of all kinds",
+"སྟོང་གསུམ་|stong gsum|the billionfold universe;ཁྱབ་པ|khyab pa|pervading;=ར་|l|makes an adverb: so as to fill;སྒྲོགས་|sgrogs|to proclaim;=པ|n;=ར་|l|joins the verb to བྱེད་;བྱེད་|byed|to do;=ན་|d;=ཡང༌|x|even (with ན་: even if)",
+"བྱམས་པ|byams pa|love;=འི་|g;སེམས་|sems|mind;=ཀྱིས་|i;སླར་ཡང་|slar yang|in return, again;དེ་ཉིད་|de nyid|that very person;=ཀྱི|g",
+"ཡོན་ཏན་;བརྗོད་|brjod|to speak of, to express;=པ་|n~"],
+tr:"Even if someone proclaims all kinds of unpleasant things about me throughout the billionfold universe, to speak in return of that person's good qualities, with a loving mind, is the practice of the bodhisattvas.",
+tk:["There are two ར་ in line 2. Do they do the same job?","No. ཁྱབ་པར་ is adverbial: so as to pervade. སྒྲོགས་པར་བྱེད་ is the periphrasis V-པར་བྱེད་, which simply means to do the proclaiming.",
+"A genitive ends line 3. What does it connect?","དེ་ཉིད་ཀྱི་ looks forward to ཡོན་ཏན་ in line 4. A genitive always points to what follows, even across a line break.",
+"What does ཉིད་ add in དེ་ཉིད་?","Emphasis: that very one. It also forms abstract nouns, as in སེམས་ཉིད་ in stanza 22."],
+qz:["In བྱམས་པའི་སེམས་ཀྱིས་, what is ཀྱིས་?","instrumental: with a loving mind","genitive","a reason","The mind with which one speaks.",
+"What does དེ་ཉིད་ཀྱི་ཡོན་ཏན་ mean?","that very person's good qualities","good qualities themselves","good qualities by that person","Genitive pointing forward.",
+"What does སྒྲོགས་པར་བྱེད་ན་ཡང་ mean?","even if someone proclaims","because someone proclaims","someone will not proclaim","ན་ཡང་: even if."]});
+NEW.push({id:"15",name:"Stanza 15",L:[
+"འགྲོ་མང་|'gro mang|many beings, a crowd;འདུས་|'dus|gathered;=པ|n;=འི་|g;དབུས་|dbus|middle;=སུ་|l|in;འགའ་ཞིག་;=གིས|a",
+"མཚང་|mtshang|hidden fault;=ནས་|s|out from;བྲུས་|brus|dug out, exposed (past of འབྲུ་);=ཤིང་|j;ཚིག་ངན་|tshig ngan|harsh words;སྨྲ་|smra|to speak;=ན་|d;=ཡང༌|x|even (with ན་: even if)",
+"དེ་;=ལ་|l|towards;དགེ་བའི་བཤེས་|dge ba'i bshes|spiritual friend;=ཀྱི་|g;འདུ་ཤེས་|'du shes|perception, notion;=ཀྱིས|i",
+"གུས་པ|gus pa|respect;=ར་|l|makes an adverb: respectfully;འདུད་|'dud|to bow;=པ་|n~"],
+tr:"Even if, in the midst of a large gathering, someone exposes my hidden faults and speaks harsh words, to bow respectfully to that person, regarding them as a spiritual friend, is the practice of the bodhisattvas.",
+tk:["འགའ་ཞིག་ has the agentive here but had none in stanza 14. Why?","Only the metre differs. In both stanzas it is the agent of a transitive verb.",
+"Which la don form follows དབུས་, and what is the full rule?","སུ་ after ས་. ཏུ་ after ག་ and བ་. དུ་ after ང་ ད་ ན་ མ་ ར་ ལ་. ར་ or རུ་ after a vowel or འ་.",
+"What does X-འི་འདུ་ཤེས་ཀྱིས་ express?","With the perception of X: regarding someone as X.",
+"Why ཤིང་ after བྲུས་?","ཤིང་ follows the suffix ས་."],
+qz:["Which la don form follows དབུས་?","སུ་","དུ་","ཏུ་","སུ་ after the suffix ས་.",
+"Which coordinating particle follows བྲུས་?","ཤིང་","ཞིང་","ཅིང་","ཤིང་ after the suffix ས་.",
+"What does འདུས་པའི་དབུས་སུ་ mean?","in the middle of a gathering","from the middle of a gathering","the middle has gathered","Relative clause, then la don of place.",
+"What does གུས་པར་འདུད་ mean?","to bow respectfully","to bow to respect","respect bows down","ར་ makes the adverb."]});
+NEW.push({id:"16",name:"Stanza 16",L:[
+"བདག་;=གི་|g;བུ་|bu|child, son;=བཞིན་|m;གཅེས་པ|gces pa|dear;=ར་|l|makes an adverb: dearly;བསྐྱངས་|bskyangs|cared for (past of སྐྱོང་);=པ|n;=འི་|g;མི|mi|person;=ས|a",
+"བདག་;=ལ་|l|at (the one looked upon);དགྲ་;=བཞིན་|m;ལྟ་|lta|to look, to regard;=བ|n;=ར་|l|joins the verb to བྱེད་;བྱེད་|byed|to do;=ན་|d;=ཡང༌|x|even (with ན་: even if)",
+"ནད་|nad|illness;=ཀྱིས་|a|marks what strikes;བཏབ་|btab|struck (past of འདེབས་);=པ|n;=འི་|g;བུ་;=ལ་|l|towards;མ་|ma|mother;བཞིན་དུ|bzhin du|just as",
+"ལྷག་པར་|lhag par|especially, all the more;བརྩེ་|brtse|to love;=བ་|n~"],
+tr:"Even if a person I have cared for as dearly as my own child regards me as an enemy, to love that person all the more, as a mother loves a child stricken by illness, is the practice of the bodhisattvas.",
+tk:["བཞིན་ occurs three times. Is it the same each time?","བུ་བཞིན་ and དགྲ་བཞིན་ mean like, as. མ་བཞིན་དུ་ adds དུ་ and qualifies the verb: in the way a mother does.",
+"In ནད་ཀྱིས་བཏབ་པའི་བུ་, who did what to whom?","Illness, marked by the agentive, struck the child. Tibetan has no separate passive: the agentive stays and English translates stricken by illness.",
+"མིས་ ends line 1. Which verb is it the agent of?","ལྟ་བར་བྱེད་ in line 2. The whole of line 1 is one long agent phrase.",
+"མ་ is a noun here. Where has མ་ been something else?","A negation (མ་ལུས་, stanza 11) and the suffix in the title (སོ་བདུན་མ་)."],
+qz:["Who is the agent of ལྟ་བར་བྱེད་?","the person I cared for (མིས་)","I (བདག་)","the enemy (དགྲ་)","མིས་ carries the agentive.",
+"What does ནད་ཀྱིས་བཏབ་པའི་བུ་ mean?","a child stricken by illness","the illness of a stricken child","a child who strikes illness","The agentive marks the illness.",
+"བསྐྱངས་ is the past stem of which verb?","སྐྱོང་","སྐྱེ་","སྐྱོབ་","སྐྱོང་, to care for, to protect.",
+"What does ལྷག་པར་བརྩེ་ mean?","to love all the more","to love less","to stop loving","ལྷག་པར་: especially, even more."]});
+NEW.push({id:"17",name:"Stanza 17",L:[
+"རང་|rang|oneself;=དང་|o|with (required by མཉམ་);མཉམ་པ|mnyam pa|equal;=འམ་|o|or;དམན་པ|dman pa|inferior;=འི་|g;སྐྱེ་བོ་|skye bo|person;=ཡིས|a",
+"ང་རྒྱལ་|nga rgyal|pride;དབང་;=གིས་|i|through;བརྙས་ཐབས་|brnyas thabs|contempt, belittling;བྱེད་;=ན་|d;=ཡང༌|x|even (with ན་: even if)",
+"བླ་མ་;བཞིན་དུ་|bzhin du|as, like;གུས་པ;=ས་|i;བདག་ཉིད་|bdag nyid|oneself;=ཀྱི|g",
+"སྤྱི་བོ|spyi bo|crown of the head;=ར་|l|on;ལེན་|len|to take;=པ་|n~"],
+tr:"Even if a person who is my equal or inferior treats me with contempt out of pride, to place that person respectfully on the crown of my head, like a teacher, is the practice of the bodhisattvas.",
+tk:["Which particle does མཉམ་ require?","དང་: equal to, literally equal with. The same goes for འདྲ་ (stanza 21) and མཚུངས་ (stanza 27).",
+"Compare འམ་ here with གམ་ in stanza 12.","The same particle, or. འམ་ is the form after a vowel. Here it joins two adjectives: equal or inferior.",
+"What is the unstated object of ལེན་?","That person. To take someone on the crown of one's head is to honour them as one's teacher."],
+qz:["What does རང་དང་མཉམ་པ་ mean?","equal to oneself","oneself and an equal","together with oneself","མཉམ་ takes དང་.",
+"In སྤྱི་བོར་, what does ར་ mark?","place: on the crown of the head","the source","the agent","La don of place.",
+"What does མཉམ་པའམ་དམན་པ་ mean?","equal or inferior","equal and inferior","neither equal nor inferior","འམ་ means or."]});
+
+NEW.push({id:"18",name:"Stanza 18",L:[
+"འཚོ་བ|'tsho ba|livelihood;=ས་|i|in (what one lacks);འཕོངས་|'phongs|to be destitute;=ཤིང་|j;རྟག་ཏུ་;མི་|mi|people, a person;=ཡིས་|a;བརྙས|brnyas|despised",
+"ཚབས་ཆེན་|tshabs chen|grave, severe;ནད་;=དང་|j;གདོན་|gdon|harmful spirits;=གྱིས་|a|marks what strikes;བཏབ་;=ཀྱང་|x;སླར|slar|in return, still",
+"འགྲོ་ཀུན་|'gro kun|all beings;སྡིག་སྡུག་|sdig sdug|evil deeds and suffering;བདག་;=ལ་|l|upon;ལེན་;བྱེད་;=ཅིང༌|j",
+"ཞུམ་པ་|zhum pa|discouragement;མེད་པ་|med pa|being without~"],
+tr:"Though destitute of livelihood, constantly despised by people, and struck by grave illness and harmful spirits, still to take upon oneself the evil deeds and sufferings of all beings, without losing heart, is the practice of the bodhisattvas.",
+tk:["Three hardships are listed before ཀྱང་. Find the three verbs.","འཕོངས་, བརྙས་ and བཏབ་. A single ཀྱང་ covers all three: although destitute, despised and struck.",
+"ཅིང་ here; ཞིང་ and ཤིང་ earlier. State the rule.","ཅིང་ after ག་ ད་ བ་. ཞིང་ after ང་ ན་ མ་ འ་ ར་ ལ་ and vowels. ཤིང་ after ས་.",
+"In མི་ཡིས་, is མི་ the negation?","No. It is the noun person with the agentive. The negation མི་ always stands directly before a verb.",
+"What kind of phrase is ཞུམ་པ་མེད་པ་?","མེད་ nominalised: being without discouragement. It is the subject of ཡིན་, like the verbal nouns of other stanzas."],
+qz:["In མི་ཡིས་བརྙས་, what is མི་?","the noun person","the negation","the pronoun I","It carries the agentive ཡིས་.",
+"Which coordinating particle follows བྱེད་?","ཅིང་","ཞིང་","ཤིང་","ཅིང་ after the suffix ད་.",
+"What does བཏབ་ཀྱང་ mean?","although struck","because struck","if struck","ཀྱང་ after a verb is concessive.",
+"What is སྡིག་སྡུག་ short for?","སྡིག་པ་དང་སྡུག་བསྔལ་","སྡིག་པའི་སྡུག་བསྔལ་","སྡུག་པའི་སྡིག་པ་","Evil deeds and suffering."]});
+NEW.push({id:"19",name:"Stanza 19",L:[
+"སྙན་པ|snyan pa|pleasant to hear, fame;=ར་|l|makes an adverb;གྲགས་|grags|to be renowned;=ཤིང་|j;འགྲོ་མང་;སྤྱི་བོ;=ས་|i;བཏུད|btud|bowed (past of འདུད་)",
+"རྣམ་ཐོས་བུ་|rnam thos bu|Vaiśravaṇa, the god of wealth;=ཡི་|g;ནོར་;འདྲ་|'dra|like, similar to;ཐོབ་|thob|to obtain;གྱུར་|gyur|became (past of འགྱུར་, auxiliary);=ཀྱང༌|x",
+"སྲིད་པ|srid pa|worldly existence;=འི་|g;དཔལ་འབྱོར་|dpal 'byor|glory and riches;སྙིང་པོ་|snying po|essence, core;མེད་|med|to be without;གཟིགས་|gzigs|to see (honorific);=ནས|s|having (links actions in sequence)",
+"ཁེངས་པ་|khengs pa|conceit;མེད་པ་~"],
+tr:"Though famed and bowed to by many, though one has obtained wealth like that of Vaiśravaṇa, to see that the glory and riches of existence have no essence, and so to be without conceit, is the practice of the bodhisattvas.",
+tk:["Compare with stanza 18. What frame do the two stanzas share?","[circumstances] + ཀྱང་ ... མེད་པ་. Adversity without discouragement; prosperity without conceit.",
+"ནས་ follows a verb in line 3. What does it do there?","After a verb it links actions in sequence: having seen. After a noun it means from or since.",
+"Recall the homage: what is dropped in སྙིང་པོ་མེད་གཟིགས་?","པར་, exactly as in འགྲོ་འོང་མེད་གཟིགས་: sees that it is without essence.",
+"གྱུར་ and འགྱུར་: which is which?","གྱུར་ is the past stem. ཐོབ་གྱུར་: has come to obtain."],
+qz:["What does གཟིགས་ནས་ mean?","having seen","from the seeing","if one sees","ནས་ after a verb marks sequence.",
+"What is གྱུར་?","the past stem of འགྱུར་","the future stem of འགྱུར་","a different verb","འགྱུར་, གྱུར་.",
+"What does རྣམ་ཐོས་བུ་ཡི་ནོར་འདྲ་ mean?","wealth like that of Vaiśravaṇa","Vaiśravaṇa is like wealth","wealth given by Vaiśravaṇa","Genitive, then འདྲ་.",
+"In སྤྱི་བོས་བཏུད་, what is ས་?","instrumental: with the crown of the head","a reason","genitive","They bow with their heads."]});
+NEW.push({id:"20",name:"Stanza 20",L:[
+"རང་;=གི་|g;ཞེ་སྡང་;དགྲ་བོ་|dgra bo|enemy;=མ་|z;ཐུལ་|thul|subdued, brought under control;=ན|d",
+"ཕྱི་རོལ་|phyi rol|outer;དགྲ་བོ་;བཏུལ་|btul|subdued (past of འདུལ་);=ཞིང་|j|here: as, the more;འཕེལ་|'phel|to increase;=བ|n;=ར་|l|joins the verb to འགྱུར་;འགྱུར|'gyur|will (auxiliary)",
+"དེ་ཕྱིར་;བྱམས་|byams|love;=དང་|j;སྙིང་རྗེ;=འི་|g;དམག་དཔུང་|dmag dpung|army;=གིས|i",
+"རང་རྒྱུད་|rang rgyud|one's own mindstream;འདུལ་|'dul|to tame;=བ་|n~"],
+tr:"If the enemy that is one's own hatred is not subdued, outer enemies will only multiply as one subdues them. Therefore, to tame one's own mind with the army of love and compassion is the practice of the bodhisattvas.",
+tk:["འདུལ་, བཏུལ་ and ཐུལ་ all appear. Sort them.","འདུལ་ is the present and བཏུལ་ the past of the deliberate, transitive verb to tame. ཐུལ་ expresses the result: to be tamed, to succeed in taming.",
+"Why མ་ཐུལ་ here but མི་འགྱུར་ in stanza 9?","མ་ negates past stems and completed states; མི་ negates present and future stems.",
+"What kind of phrase is ཞེ་སྡང་དགྲ་བོ་?","An apposition used as metaphor, the enemy that is hatred, like དལ་འབྱོར་གྲུ་ཆེན་. Line 3 has the other type, with the genitive: the army of love and compassion.",
+"What does V-བར་འགྱུར་ express?","A future result: will come to V."],
+qz:["Why མ་ and not མི་ before ཐུལ་?","ཐུལ་ is a completed state, and མ་ goes with past stems","ཐུལ་ is a noun","མ་ is used before every verb in verse","མ་ with past stems and imperatives.",
+"What does འཕེལ་བར་འགྱུར་ mean?","will increase","has increased","do not increase","V-བར་འགྱུར་ is a future.",
+"In དམག་དཔུང་གིས་, what is གིས་?","instrumental: with the army","the agent of འཕེལ་","genitive","The means by which one tames."]});
+NEW.push({id:"21",name:"Stanza 21",L:[
+"འདོད་པའི་ཡོན་ཏན་|'dod pa'i yon tan|sense pleasures, the objects of desire;ལན་ཚྭ|lan tshwa|salt;=འི་|g;ཆུ་;=དང་|o|with (required by འདྲ་);འདྲ|'dra|to be like",
+"ཇི་ཙམ་|ji tsam|however much;སྤྱད་|spyad|enjoyed, used (past of སྤྱོད་);=ཅིང་|j|here: the more;སྲེད་པ་|sred pa|craving;འཕེལ་;=བ|n;=ར་|l|joins the verb to འགྱུར་;འགྱུར",
+"གང་|gang|whatever;=ལ་|l|towards;ཞེན་ཆགས་|zhen chags|clinging, attachment;སྐྱེ་|skye|to arise;=བ|n;=འི་|g;དངོས་པོ་|dngos po|things;=རྣམས|p",
+"འཕྲལ་ལ་|'phral la|at once, immediately;སྤོང་;=བ་|n~"],
+tr:"Sense pleasures are like salt water: the more one partakes of them, the more craving grows. To give up at once whatever things give rise to clinging is the practice of the bodhisattvas.",
+tk:["X དང་འདྲ་ is a third way of comparing. What are the other two?","ལྟར་ and བཞིན་, which follow a noun. འདྲ་ is a verb, to be like, and takes its complement with དང་.",
+"How does ཇི་ཙམ་ ... ཅིང་ come to mean the more ... the more?","ཇི་ཙམ་ means however much; the coordinating particle links it to the result: however much one enjoys, craving increases.",
+"Where have we met the frame གང་ལ་ ... བའི་དངོས་པོ་?","In the homage and in stanzas 5, 6 and 7: a relative clause opened by གང་ and closed by པའི་ or བའི་. Here: things towards which clinging arises."],
+qz:["What does ལན་ཚྭའི་ཆུ་དང་འདྲ་ mean?","is like salt water","is mixed with salt water","salt and water are alike","འདྲ་ takes དང་.",
+"སྤྱད་ is the past stem of which verb?","སྤྱོད་","སྤོང་","སྦྱོར་","སྤྱོད་, to use, to enjoy.",
+"What is the head noun of the clause ending in སྐྱེ་བའི་?","དངོས་པོ་རྣམས་","ཞེན་ཆགས་","སྲེད་པ་","Things towards which clinging arises.",
+"What does འཕྲལ་ལ་ mean?","immediately","eventually","separately","At once."]});
+NEW.push({id:"22",name:"Stanza 22",L:[
+"ཇི་ལྟར་|ji ltar|however, in whatever way;སྣང་བ་|snang ba|appearing, appearance;འདི་དག་|'di dag|these;རང་;=གི་|g;སེམས|sems|mind",
+"སེམས་ཉིད་|sems nyid|mind itself, the nature of mind;གདོད་|gdod|the very beginning;=ནས་|s|since;སྤྲོས་པ|spros pa|conceptual elaboration;=འི་|g;མཐའ་|mtha'|extreme, limit;=དང་|o|from (required by བྲལ་);བྲལ|bral|to be free of, separated from",
+"དེ་ཉིད་|de nyid|just that, suchness;ཤེས་|shes|to know;=ནས་|s|having (links actions in sequence);གཟུང་འཛིན་|gzung 'dzin|apprehended object and apprehending subject;མཚན་མ་|mtshan ma|characteristics, signs;=རྣམས|p",
+"ཡིད་|yid|mind;=ལ་|l|in;=མི་|z;བྱེད་|byed|to do (ཡིད་ལ་བྱེད་: to bring to mind)~"],
+tr:"These appearances, however they appear, are one's own mind. Mind itself is from the very beginning free from the extremes of elaboration. Knowing just that, not to bring to mind the characteristics of object and subject is the practice of the bodhisattvas.",
+tk:["Line 1 is a sentence without ཡིན་. Where would it go?","At the end: འདི་དག་རང་གི་སེམས་ཡིན་. Verse often leaves out the linking verb. Line 2 has its own verb, བྲལ་.",
+"What does དང་ mean with བྲལ་?","From: free from, separated from. དང་ goes with verbs of union and of separation alike: འགྲོགས་, མཉམ་, འདྲ་, འཕྲད་, ལྡན་, བྲལ་.",
+"ནས་ occurs twice: གདོད་ནས་ and ཤེས་ནས་. Compare.","After the noun: since the beginning. After the verb: having known.",
+"གཟུང་ and འཛིན་ are stems of one verb. How do they come to mean object and subject?","འཛིན་, present: that which grasps. གཟུང་, future: that which is to be grasped. Compare བླང་དོར་ in stanza 2."],
+qz:["What does གདོད་ནས་ mean?","from the very beginning","having begun","at the end","ནས་ after a noun: since.",
+"What does སྤྲོས་པའི་མཐའ་དང་བྲལ་ mean?","free from the extremes of elaboration","together with the extremes of elaboration","the extremes are elaborated","བྲལ་ takes དང་.",
+"What does ཡིད་ལ་མི་བྱེད་ mean?","not to bring to mind","the mind does nothing","not to make a mind","ཡིད་ལ་བྱེད་ is an idiom.",
+"Which stem of འཛིན་ is གཟུང་?","future","present","imperative","What is to be grasped."]});
+NEW.push({id:"23",name:"Stanza 23",L:[
+"ཡིད་དུ་འོང་|yid du 'ong|pleasing (literally: coming to mind);=བ|n;=འི་|g;ཡུལ་|yul|object;=དང་|o|with (required by འཕྲད་);འཕྲད་|'phrad|to meet, to encounter;=པ་|n;=ན|l|when",
+"དབྱར་|dbyar|summer;=གྱི་|g;དུས་|dus|season, time;=ཀྱི་|g;འཇའ་ཚོན་|'ja' tshon|rainbow;ཇི་བཞིན་དུ|ji bzhin du|just like",
+"མཛེས་པ|mdzes pa|beautiful;=ར་|l|as;སྣང་|snang|to appear;=ཡང་|x;བདེན་པ|bden pa|true, real;=ར་|l|as;=མི་|z;ལྟ་|lta|to view, to regard;=ཞིང༌|j",
+"ཞེན་ཆགས་;སྤོང་;=བ་|n~"],
+tr:"When encountering pleasing objects, to regard them as being like a summer rainbow, beautiful in appearance yet not real, and to give up clinging, is the practice of the bodhisattvas.",
+tk:["Compare V-པ་ན་ with V-ན་.","V-པ་ན་ is temporal: when, at the time of V-ing (the la don on a verbal noun). V-ན་ directly on the stem is conditional: if.",
+"What does ར་ do with སྣང་ and with ལྟ་?","It marks the complement: appear as beautiful, regard as real.",
+"Why ཡང་ after སྣང་?","It is the concessive in the form used after the suffix ང་: although it appears.",
+"ཡིད་དུ་འོང་བ་ is an idiom. What is its opposite?","ཡིད་དུ་མི་འོང་བ་, unpleasant, which appears in stanza 34."],
+qz:["What does འཕྲད་པ་ན་ mean?","when one meets","if one does not meet","from the meeting","La don on the verbal noun: when.",
+"What does བདེན་པར་མི་ལྟ་ mean?","not to regard as real","not to see the truth","truly not to look","ར་ marks the complement of ལྟ་.",
+"Which concessive form follows སྣང་?","ཡང་","ཀྱང་","འང་","ཡང་ after the suffix ང་.",
+"With which particle does འཕྲད་ take its complement?","དང་","ལས་","ཀྱིས་","To meet with."]});
+NEW.push({id:"24",name:"Stanza 24",L:[
+"སྡུག་བསྔལ་;སྣ་ཚོགས་|sna tshogs|various;རྨི་ལམ་|rmi lam|dream;བུ་;ཤི་|shi|died (past of འཆི་);=ལྟར|m",
+"འཁྲུལ་སྣང་|'khrul snang|deluded appearance;བདེན་པ;=ར་|l|as;བཟུང་|bzung|held, taken (past of འཛིན་);=བ|n;=ས་|c;ཨ་ཐང་ཆད|a thang chad|to be worn out, exhausted",
+"དེ་ཕྱིར་;མི་མཐུན་རྐྱེན་|mi mthun rkyen|adverse circumstances;=དང་|o|with (required by འཕྲད་);འཕྲད་;=པ|n;=འི་|g;ཚེ|tshe|time, when",
+"འཁྲུལ་པ|'khrul pa|delusion, illusion;=ར་|l|as;ལྟ་;=བ་|n~"],
+tr:"The various sufferings are like the death of one's child in a dream: by taking deluded appearances as real, one wears oneself out. Therefore, when meeting with adverse circumstances, to regard them as illusion is the practice of the bodhisattvas.",
+tk:["Restore the particles in རྨི་ལམ་བུ་ཤི་ལྟར་.","རྨི་ལམ་དུ་བུ་ཤི་བ་ལྟར་: like a child dying in a dream.",
+"བཟུང་ here, གཟུང་ in stanza 22, འཛིན་ in stanza 6. Complete the paradigm.","Present འཛིན་, past བཟུང་, future གཟུང་, imperative ཟུངས་.",
+"V-པའི་ཚེ་ is another way of saying when. Which others have we seen?","V-པ་ན་ in stanza 23 and V + དུས་ in stanza 1.",
+"Stanzas 23 and 24 are a pair. What do they share?","Pleasant objects and adverse circumstances are met in the same way: regard as, with ར་ and ལྟ་."],
+qz:["What does བཟུང་བས་ mean?","because of having taken","in order to take","although taken","Nominaliser plus agentive: reason.",
+"What does འཕྲད་པའི་ཚེ་ mean?","when meeting","because of meeting","the life one meets","ཚེ་ here means time.",
+"Which stem of འཛིན་ is བཟུང་?","past","future","present","འཛིན་, བཟུང་, གཟུང་, ཟུངས་.",
+"What does འཁྲུལ་པར་ལྟ་བ་ mean?","to regard as illusion","to look while deluded","the view is deluded","ར་ marks the complement of ལྟ་."]});
+NEW.push({id:"25",name:"Stanza 25",L:[
+"བྱང་ཆུབ་;འདོད་པ|'dod pa|one who wants;=ས་|a;ལུས་;=ཀྱང་|e|even;བཏང་|btang|to give up (stem of གཏོང་);དགོས་|dgos|must, to need;=ན|d",
+"ཕྱི་རོལ་;དངོས་པོ་;=རྣམས་|p;=ལ་|l|as for;སྨོས་ཅི་དགོས|smos ci dgos|what need is there to mention",
+"དེ་ཕྱིར་;ལན་|lan|return, repayment;=དང་|j;རྣམ་སྨིན་|rnam smin|karmic ripening, reward;=མི་|z;རེ་|re|to hope for;=བ|n;=འི|g",
+"སྦྱིན་པ་|sbyin pa|gift, generosity;གཏོང་|gtong|to give;=བ་|n~"],
+tr:"If those who want awakening must give up even their body, what need is there to mention outer things? Therefore, to give generously without hoping for anything in return or for karmic reward is the practice of the bodhisattvas.",
+tk:["Translate X ལ་སྨོས་ཅི་དགོས་ literally.","As for X, what need is there to speak? It is the standard a fortiori formula: let alone X, needless to say X.",
+"Is འདོད་པས་ an agent or a reason?","It can be read either way: by one who wants awakening, or because one wants awakening. Discuss which fits better with བཏང་དགོས་.",
+"Stanzas 25 to 30 form a set. What do their fourth lines name?","The six transcendent perfections: སྦྱིན་པ་, ཚུལ་ཁྲིམས་, བཟོད་པ་, བརྩོན་འགྲུས་, བསམ་གཏན་, ཤེས་རབ་. Each is preceded by a qualifying clause ending in a genitive.",
+"What does ཀྱང་ mean after ལུས་?","Even: even the body. After a noun ཀྱང་ is inclusive, as in stanza 6."],
+qz:["What does ལུས་ཀྱང་ mean?","even the body","although the body","the body alone","ཀྱང་ after a noun: even.",
+"What does སྨོས་ཅི་དགོས་ mean?","what need is there to mention","it must be mentioned","do not mention it","A rhetorical question.",
+"What does མི་རེ་བའི་སྦྱིན་པ་ mean?","generosity that does not hope","hoping for no gift","the gift of no hope","A relative clause before its noun.",
+"What does བཏང་དགོས་ mean?","must give up","has given up","wants to give up","Verb + དགོས་: must."]});
+NEW.push({id:"26",name:"Stanza 26",L:[
+"ཚུལ་ཁྲིམས་|tshul khrims|discipline;མེད་པ;=ར་|l|makes an adverb: without;རང་དོན་|rang don|one's own good;=མི་|z;འགྲུབ་|'grub|to be accomplished (intransitive);=ན|d",
+"གཞན་དོན་|gzhan don|the good of others;སྒྲུབ་|sgrub|to accomplish (transitive);=པ|n;=ར་|l|joins the verb to འདོད་;འདོད་པ་|'dod pa|wishing, the wish;གད་མོ|gad mo|laughter;=འི་|g;གནས|gnas|place, occasion",
+"དེ་ཕྱིར་;སྲིད་པ;=འི་|g;འདུན་པ་|'dun pa|aspiration, longing;མེད་པ་;=ཡི|g",
+"ཚུལ་ཁྲིམས་;སྲུང་|srung|to guard, to keep;=བ་|n~"],
+tr:"If without discipline one cannot accomplish even one's own good, wishing to accomplish the good of others is laughable. Therefore, to keep discipline free from worldly aspirations is the practice of the bodhisattvas.",
+tk:["འགྲུབ་ and སྒྲུབ་ are another verb pair. Explain.","འགྲུབ་ is intransitive: something gets accomplished. སྒྲུབ་ is transitive: someone accomplishes something. Compare འགྱུར་ and སྒྱུར་ in stanza 5.",
+"What does གད་མོའི་གནས་ mean literally?","An occasion for laughter. It is the predicate of line 2, with ཡིན་ left out.",
+"What does V-པར་འདོད་ mean?","To want to V.",
+"མེད་པ་ཡི་ ends line 3. What does the genitive link?","The whole clause to ཚུལ་ཁྲིམས་ in line 4: discipline that is without worldly aspiration."],
+qz:["Which verb is intransitive?","འགྲུབ་","སྒྲུབ་","སྲུང་","Something is accomplished.",
+"What does སྒྲུབ་པར་འདོད་ mean?","to wish to accomplish","to accomplish a wish","accomplished because wished","V-པར་འདོད་: want to V.",
+"What does མེད་པར་ mean in line 1?","without","inside nothing","into nothing","Adverbial: without discipline."]});
+NEW.push({id:"27",name:"Stanza 27",L:[
+"དགེ་བ|dge ba|virtue;=འི་|g;ལོངས་སྤྱོད་|longs spyod|wealth, enjoyment;འདོད་|'dod|to want;=པ|n;=འི་|g;རྒྱལ་སྲས་;=ལ|l|for",
+"གནོད་བྱེད་|gnod byed|one who does harm;ཐམས་ཅད་;རིན་ཆེན་|rin chen|precious;གཏེར་|gter|treasure;=དང་|o|with (required by མཚུངས་);མཚུངས|mtshungs|to be equal to, to be like",
+"དེ་ཕྱིར་;ཀུན་|kun|all, everyone;=ལ་|l|towards;ཞེ་འགྲས་|zhe 'gras|resentment, hostility;མེད་པ་;=ཡི|g",
+"བཟོད་པ་|bzod pa|patience;སྒོམ་;=པ་|n~"],
+tr:"For a bodhisattva who wants the wealth of virtue, all who do harm are like a precious treasure. Therefore, to cultivate patience, free from resentment towards anyone, is the practice of the bodhisattvas.",
+tk:["How is the agent noun གནོད་བྱེད་ formed?","Noun plus བྱེད་: doer of harm. It shortens གནོད་པ་བྱེད་པ་པོ་.",
+"What does ལ་ mean in རྒྱལ་སྲས་ལ་?","For: from the standpoint of a bodhisattva.",
+"List the verbs of likeness and equality that take དང་.","འདྲ་ (stanza 21), མཉམ་ (stanza 17) and མཚུངས་ here."],
+qz:["What does གཏེར་དང་མཚུངས་ mean?","is like a treasure","has a treasure","stays with a treasure","མཚུངས་ takes དང་.",
+"What does འདོད་པའི་རྒྱལ་སྲས་ mean?","a bodhisattva who wants","the desire of a bodhisattva","wanting a bodhisattva","Relative clause before its noun.",
+"What does ཀུན་ལ་ཞེ་འགྲས་མེད་པ་ mean?","without resentment towards anyone","everyone is without resentment","resentment towards all","ལ་: towards."]});
+
+NEW.push({id:"28",name:"Stanza 28",L:[
+"རང་དོན་;འབའ་ཞིག་|'ba' zhig|only, solely;སྒྲུབ་|sgrub|to accomplish;=པ|n;=འི་|g;ཉན་རང་|nyan rang|śrāvakas and pratyekabuddhas;=ཡང༌|e|even",
+"མགོ་|mgo|head;=ལ་|l|on;མེ་;ཤོར་|shor|caught, broke out (past of འཆོར་);བཟློག་|bzlog|to avert, to put out;=ལྟར་|m;བརྩོན་|brtson|to strive;མཐོང་|mthong|to see;=ན|d",
+"འགྲོ་ཀུན་;དོན་དུ་|don du|for the sake of;ཡོན་ཏན་;འབྱུང་གནས་;=ཀྱི|g",
+"བརྩོན་འགྲུས་|brtson 'grus|diligence;རྩོམ་|rtsom|to undertake, to begin;=པ་|n~"],
+tr:"If we see that even śrāvakas and pratyekabuddhas, who accomplish only their own good, strive as if putting out a fire on their heads, then to undertake diligence, the source of good qualities, for the sake of all beings is the practice of the bodhisattvas.",
+tk:["Unpack the simile མགོ་ལ་མེ་ཤོར་བཟློག་ལྟར་.","In prose: མགོ་ལ་མེ་ཤོར་བ་བཟློག་པ་ལྟར་, like averting a fire that has caught on one's head.",
+"What kind of compound is ཉན་རང་?","An abbreviation taking one syllable from each term: ཉན་ཐོས་ and རང་སངས་རྒྱས་.",
+"In བརྩོན་མཐོང་ན་, who sees and what is seen?","We see that they strive. The object of མཐོང་ is a clause, with པར་ dropped as in མེད་གཟིགས་.",
+"What does the genitive do in འབྱུང་གནས་ཀྱི་བརྩོན་འགྲུས་?","It identifies: diligence, which is the source of good qualities."],
+qz:["What does ཉན་རང་ཡང་ mean?","even śrāvakas and pratyekabuddhas","although they listen to themselves","śrāvakas alone","ཡང་ after a noun: even.",
+"What does མཐོང་ན་ mean?","if (when) one sees","having seen","in order to see","ན་ after a verb stem.",
+"What does འགྲོ་ཀུན་དོན་དུ་ mean?","for the sake of all beings","the meaning of all beings","the wealth of all beings","དོན་དུ་: for the sake of."]});
+NEW.push({id:"29",name:"Stanza 29",L:[
+"ཞི་གནས་|zhi gnas|calm abiding (Skt. śamatha);རབ་ཏུ་|rab tu|thoroughly;ལྡན་|ldan|endowed with;=པ|n;=འི་|g;ལྷག་མཐོང་|lhag mthong|special insight (Skt. vipaśyanā);=གིས|a",
+"ཉོན་མོངས་;རྣམ་པར་|rnam par|completely;འཇོམས་|'joms|to destroy;=པ|n;=ར་|l|marks what is known: that;ཤེས་;བྱས་|byas|done (past of བྱེད་);=ནས|s|having (links actions in sequence)",
+"གཟུགས་མེད་|gzugs med|the formless [absorptions];བཞི་|bzhi|four;=ལས་|s|beyond;ཡང་དག་;འདའ་|'da'|to pass beyond, to transcend;=བ་|n;=ཡི|g",
+"བསམ་གཏན་|bsam gtan|meditative concentration (Skt. dhyāna);སྒོམ་;=པ་|n~"],
+tr:"Having understood that special insight thoroughly endowed with calm abiding completely destroys the afflictions, to cultivate a concentration that truly goes beyond the four formless absorptions is the practice of the bodhisattvas.",
+tk:["Who destroys what in lines 1 and 2?","ལྷག་མཐོང་གིས་ is the agent, ཉོན་མོངས་ the object, འཇོམས་ the verb.",
+"What does ར་ mark in འཇོམས་པར་ཤེས་?","The content of the knowing: to know that it destroys. This is the full form of what verse usually shortens, as in མེད་གཟིགས་.",
+"What are རབ་ཏུ་, རྣམ་པར་ and ཡང་དག་?","Adverbs that render Sanskrit verbal prefixes (pra-, vi-, sam-). They intensify the verb: thoroughly, completely, truly.",
+"Which particle goes with འདའ་?","ལས་: to pass beyond, literally to pass from."],
+qz:["Who is the agent of འཇོམས་?","ལྷག་མཐོང་","ཉོན་མོངས་","ཞི་གནས་","It carries the agentive གིས་.",
+"What does ཤེས་བྱས་ནས་ mean?","having understood","in order to understand","if one understands","ནས་ after a verb: sequence.",
+"What does གཟུགས་མེད་བཞི་ལས་འདའ་བ་ mean?","passing beyond the four formless absorptions","passing into the four formless absorptions","the four formless ones pass away","འདའ་ takes ལས་."]});
+NEW.push({id:"30",name:"Stanza 30",L:[
+"ཤེས་རབ་|shes rab|wisdom (Skt. prajñā);མེད་པ;=ར་|l|makes an adverb: without;ཕ་རོལ་ཕྱིན་|pha rol phyin|transcendent perfection (Skt. pāramitā);ལྔ་|lnga|five;=ཡིས|i",
+"རྫོགས་པ;=འི་|g;བྱང་ཆུབ་;འཐོབ་|'thob|to attain;=པ|n;=ར་|l|joins the verb to ནུས་;=མི་|z;ནུས་|nus|to be able;=པ|n;=ས|c",
+"ཐབས་|thabs|skilful means;=དང་|o|with (required by ལྡན་);ལྡན་;=ཞིང་|j;འཁོར་གསུམ་|'khor gsum|the three spheres: agent, object and action;=མི་|z;རྟོག་|rtog|to conceive, to conceptualise;=པ|n;=འི|g",
+"ཤེས་རབ་;སྒོམ་;=པ་|n~"],
+tr:"Since without wisdom the five perfections cannot bring about the attainment of perfect awakening, to cultivate wisdom that is endowed with skilful means and does not conceive of the three spheres is the practice of the bodhisattvas.",
+tk:["Is ལྔ་ཡིས་ an agent or an instrument?","An instrument: by means of the five perfections one cannot attain.",
+"Where does མི་ stand in འཐོབ་པར་མི་ནུས་?","Before ནུས་. In a verb phrase with an auxiliary, the negation goes before the last verb.",
+"Two qualifiers of ཤེས་རབ་ are joined by ཞིང་. Name them.","ཐབས་དང་ལྡན་, endowed with means, and འཁོར་གསུམ་མི་རྟོག་པ་, not conceiving the three spheres.",
+"What does ཕ་རོལ་ཕྱིན་ mean literally?","Gone to the other side: ཕ་རོལ་ཏུ་ཕྱིན་པ་."],
+qz:["What does འཐོབ་པར་མི་ནུས་པས་ mean?","because one cannot attain","although one cannot attain","in order not to attain","པས་ gives the reason.",
+"What does ཐབས་དང་ལྡན་ mean?","endowed with skilful means","means and endowment","free from means","ལྡན་ takes དང་.",
+"In ཕ་རོལ་ཕྱིན་ལྔ་ཡིས་, what is ཡིས་?","instrumental: by means of the five","genitive","final particle","The agentive form after a vowel."]});
+NEW.push({id:"31",name:"Stanza 31",L:[
+"རང་;=གི་|g;འཁྲུལ་པ་|'khrul pa|error, confusion;རང་;=གིས་|a;=མ་|z;བརྟགས་|brtags|examined (past of རྟོག་);=ན|d",
+"ཆོས་པ|chos pa|Dharma practitioner;=འི་|g;གཟུགས་|gzugs|form, outward appearance;=ཀྱིས་|i|with, under;ཆོས་མིན་|chos min|what is not Dharma;བྱེད་|byed|to do;སྲིད་|srid|to be possible;=པ|n;=ས|c",
+"དེ་ཕྱིར་;རྒྱུན་དུ་|rgyun du|continually;རང་;=གི་|g;འཁྲུལ་པ་;=ལ|l|into (what is examined)",
+"བརྟགས་;=ནས་|s|having (links actions in sequence);སྤོང་;=བ་|n~"],
+tr:"If one does not examine one's own errors oneself, one may, under the outward form of a practitioner, do what is not Dharma. Therefore, continually to examine one's own errors and give them up is the practice of the bodhisattvas.",
+tk:["རང་གི་ and རང་གིས་ stand in the same line. Compare.","Genitive, one's own, and agentive, by oneself. A single letter changes the role of the word.",
+"What does V + སྲིད་ mean?","It is possible that, may: བྱེད་སྲིད་, may do.",
+"མིན་ and མེད་: what does each negate?","མིན་ negates ཡིན་ (is not). མེད་ negates ཡོད་ (there is not, has not). ཆོས་མིན་: what is not Dharma.",
+"How many actions are in བརྟགས་ནས་སྤོང་བ་?","Two in sequence: having examined, abandon. One nominaliser covers both."],
+qz:["What is རང་གིས་?","agentive: by oneself","genitive: one's own","la don: to oneself","གིས་ is the agentive.",
+"What does བྱེད་སྲིད་ mean?","may do","must do","has done","སྲིད་: it is possible.",
+"What does ཆོས་མིན་ mean?","what is not Dharma","there is no Dharma","without Dharma","མིན་ negates ཡིན་.",
+"What does མ་བརྟགས་ན་ mean?","if one has not examined","do not examine","since one examines","མ་ with the past stem, then ན་."]});
+NEW.push({id:"32",name:"Stanza 32",L:[
+"ཉོན་མོངས་;དབང་;=གིས་|i|through;རྒྱལ་སྲས་;གཞན་དག་|gzhan dag|others;=གི|g",
+"ཉེས་པ་|nyes pa|faults;གླེང་|gleng|to talk about, to bring up;=ན་|d;བདག་ཉིད་;ཉམས་|nyams|to decline;འགྱུར་|'gyur|come to (auxiliary);=བ|n;=ས|c",
+"ཐེག་པ་ཆེ་|theg pa che|the Great Vehicle;=ལ་|l|into;ཞུགས་|zhugs|entered (past of འཇུག་);=པ|n;=འི་|g;གང་ཟག་|gang zag|person;=གི|g",
+"ཉེས་པ་;=མི་|z;སྨྲ་|smra|to speak~"],
+tr:"If, under the power of the afflictions, one talks about the faults of other bodhisattvas, one will oneself decline. Therefore, not to speak of the faults of those who have entered the Great Vehicle is the practice of the bodhisattvas.",
+tk:["Lines 1 and 3 both end in a genitive. What does each connect to?","To ཉེས་པ་ at the head of the next line: the faults of other bodhisattvas, the faults of persons.",
+"The source PDF reads གིས་ in both places. How would that change the meaning?","With the agentive, line 1 would say: if other bodhisattvas talk of faults. The genitive is the usual reading, but compare the edition used in class.",
+"འཇུག་ appeared in stanza 12 as to cause. What is it here?","To enter, with the past stem ཞུགས་. Two verbs share the present stem འཇུག་: to enter (འཇུག་, ཞུགས་) and to put in, to cause (འཇུག་, བཅུག་)."],
+qz:["What does གཞན་དག་གི་ཉེས་པ་ mean?","the faults of others","faults spoken by others","others are at fault","Genitive across the line break.",
+"What does ཐེག་པ་ཆེ་ལ་ཞུགས་པའི་གང་ཟག་ mean?","a person who has entered the Great Vehicle","the Great Vehicle that a person enters","a person leaving the Great Vehicle","Relative clause before its noun.",
+"ཞུགས་ is the past stem of which verb?","འཇུག་","བཞུགས་","ཞུ་","འཇུག་, to enter."]});
+NEW.push({id:"33",name:"Stanza 33",L:[
+"རྙེད་བཀུར་|rnyed bkur|gain and honour;དབང་;=གིས་|i|through;ཕན་ཚུན་|phan tshun|one another, mutually;རྩོད་|rtsod|to quarrel;འགྱུར་;=ཞིང༌|j",
+"ཐོས་;བསམ་;སྒོམ་;=པ|n;=འི་|g;བྱ་བ་;ཉམས་;འགྱུར་;=བ|n;=ས|c",
+"མཛའ་བཤེས་;ཁྱིམ་|khyim|household;=དང་|j;སྦྱིན་བདག་|sbyin bdag|benefactor, patron;ཁྱིམ་;=རྣམས་|p;=ལ|l|to",
+"ཆགས་པ་|chags pa|attachment;སྤོང་;=བ་|n~"],
+tr:"Because of gain and honour people come to quarrel with one another, and the activities of hearing, reflecting and meditating decline. Therefore, to give up attachment to the households of friends and benefactors is the practice of the bodhisattvas.",
+tk:["Line 2 repeats a line from an earlier stanza. Which one, and what has changed?","Stanza 5, line 2. There it ended in ལ་, and. Here it ends in བས་, because: the decline is now the reason for the practice.",
+"Which particle goes with ཆགས་པ་?","ལ་: attachment to.",
+"What is ཕན་ཚུན་?","Literally thither and hither: a reciprocal adverb, one another."],
+qz:["What does ཁྱིམ་རྣམས་ལ་ཆགས་པ་ mean?","attachment to households","the households are attached","attachment coming from households","ཆགས་པ་ takes ལ་.",
+"What does ཉམས་འགྱུར་བས་ mean?","because they decline","although they decline","if they decline","བས་ gives the reason.",
+"What does རྙེད་བཀུར་དབང་གིས་ mean?","through the power of gain and honour","the power to gain honour","in order to gain honour","X དབང་གིས་: under the influence of X."]});
+NEW.push({id:"34",name:"Stanza 34",L:[
+"རྩུབ་མོ|rtsub mo|harsh;=འི་|g;ཚིག་|tshig|word;=གིས་|a|marks the cause: by;གཞན་སེམས་|gzhan sems|the minds of others;འཁྲུག་|'khrug|to be disturbed;འགྱུར་;=ཞིང༌|j",
+"རྒྱལ་བ|rgyal ba|the Victorious One;=འི་|g;སྲས་|sras|child (honorific);=ཀྱི་|g;སྤྱོད་ཚུལ་|spyod tshul|way of conduct;ཉམས་;འགྱུར་;=བ|n;=ས|c",
+"དེ་ཕྱིར་;གཞན་|gzhan|others;=གྱི་|g;ཡིད་དུ་|yid du|to the mind;=མི་|z;འོང་|'ong|to come;=བ|n;=འི|g",
+"ཚིག་རྩུབ་|tshig rtsub|harsh words;སྤོང་;=བ་|n~"],
+tr:"Harsh words disturb the minds of others and cause the conduct of a child of the Victorious Ones to decline. Therefore, to give up harsh words, which are unpleasant to others, is the practice of the bodhisattvas.",
+tk:["What do we find at last in རྒྱལ་བའི་སྲས་ཀྱི་?","The full form of རྒྱལ་སྲས་, with both genitives written out, as reconstructed in the lesson on the title.",
+"Compare རྩུབ་མོའི་ཚིག་ and ཚིག་རྩུབ་.","An adjective placed before its noun needs the genitive; placed after it, none.",
+"Where does the negation go in ཡིད་དུ་མི་འོང་བ་?","Directly before the verb, inside the idiom. Compare ཡིད་དུ་འོང་བ་ in stanza 23."],
+qz:["རྒྱལ་བའི་སྲས་ is the full form of what?","རྒྱལ་སྲས་","རྒྱལ་པོ་","སྲས་མོ་","Child of the Victorious One.",
+"What does གཞན་གྱི་ཡིད་དུ་མི་འོང་བ་ mean?","unpleasant to others","others do not come","not coming to another's house","The idiom ཡིད་དུ་འོང་, negated.",
+"What does an adjective placed before its noun need?","a genitive","an agentive","no particle","རྩུབ་མོའི་ཚིག་."]});
+NEW.push({id:"35",name:"Stanza 35",L:[
+"ཉོན་མོངས་;གོམས་|goms|to become habitual;=ན་|d|if, once;གཉེན་པོ|gnyen po|antidote;=ས་|i;ཟློག་|zlog|to turn back, to reverse;དཀའ་|dka'|difficult;=བ|n;=ས|c",
+"དྲན་ཤེས་|dran shes|mindfulness and vigilance;སྐྱེས་བུ|skyes bu|person, warrior;=ས་|a;གཉེན་པོ;=འི་|g;མཚོན་|mtshon|weapon;བཟུང་|bzung|taken up, held (past of འཛིན་);=ནས|s|having (links actions in sequence)",
+"ཆགས་|chags|attachment;སོགས་|sogs|and so on;ཉོན་མོངས་;དང་པོ་|dang po|first;སྐྱེས་མ་ཐག|skyes ma thag|as soon as arisen",
+"འབུར་འཇོམས་|'bur 'joms|to crush at once, to flatten;བྱེད་;=པ་|n~"],
+tr:"Once the afflictions have become habitual, it is hard to turn them back with antidotes. Therefore, as a warrior of mindfulness and vigilance who has taken up the weapon of the antidote, to crush attachment and the other afflictions the moment they first arise is the practice of the bodhisattvas.",
+tk:["What does V + མ་ཐག་ mean?","Immediately after V-ing. It follows the past stem: སྐྱེས་མ་ཐག་, as soon as it has arisen.",
+"Recall རྙེད་དཀའ་ in stanza 1. What is ཟློག་དཀའ་?","The same pattern, verb stem plus དཀའ་: hard to turn back. The opposite is formed with སླ་, easy.",
+"Line 2 has two metaphors of different types. Identify them.","དྲན་ཤེས་སྐྱེས་བུ་ is an apposition: the warrior who is mindfulness and vigilance. གཉེན་པོའི་མཚོན་ uses the genitive: the weapon of the antidote.",
+"What is སོགས་ short for?","ལ་སོགས་པ་, and so forth. The full form appears in the concluding verses."],
+qz:["What does སྐྱེས་མ་ཐག་ mean?","as soon as it has arisen","before it arises","it never arises","V + མ་ཐག་: immediately after.",
+"What does ཟློག་དཀའ་ mean?","hard to turn back","easy to turn back","must be turned back","Verb stem plus དཀའ་.",
+"Who is the agent of བཟུང་?","དྲན་ཤེས་སྐྱེས་བུ་","གཉེན་པོ་","ཉོན་མོངས་","སྐྱེས་བུས་ carries the agentive.",
+"What does ཆགས་སོགས་ mean?","attachment and so on","all attachment","without attachment","སོགས་: and so forth."]});
+NEW.push({id:"36",name:"Stanza 36",L:[
+"མདོར་ན་|mdor na|in brief;གང་དུ་|gang du|wherever;སྤྱོད་ལམ་|spyod lam|conduct, activity;ཅི་|ci|what, whatever;བྱེད་;=ཀྱང༌|x|with ཅི་: whatever one does",
+"རང་;=གི་|g;སེམས་|sems|mind;=ཀྱི་|g;གནས་སྐབས་|gnas skabs|state, condition;ཅི་འདྲ་|ci 'dra|like what, how;=ཞེས|o|quotation marker: closes what is asked or thought",
+"རྒྱུན་དུ་;དྲན་|dran|mindfulness;=དང་|j;ཤེས་བཞིན་|shes bzhin|vigilance;ལྡན་;=པ་|n;=ཡིས|i|by, through",
+"གཞན་དོན་;སྒྲུབ་|sgrub|to accomplish;=པ་|n~"],
+tr:"In brief, wherever one is and whatever one does, to accomplish the good of others while continually possessing mindfulness and vigilance, asking oneself what the state of one's mind is, is the practice of the bodhisattvas.",
+tk:["What does ཞེས་ close, and what are its other forms?","A quoted question or thought: what is the state of my mind? Forms: ཅེས་ after ག་ ད་ བ་; ཞེས་ after ང་ ན་ མ་ འ་ ར་ ལ་ and vowels; ཤེས་ after ས་. The distribution is the same as for ཅིང་ ཞིང་ ཤིང་.",
+"How do གང་དུ་ and ཅི་ ... ཀྱང་ work together?","An indefinite word plus the concessive gives wherever, whatever: whatever one may be doing, wherever.",
+"What does ལྡན་པ་ཡིས་ express?","By being endowed, or by one who is endowed: the manner in which, or the person by whom, the good of others is accomplished. Discuss both readings."],
+qz:["What does ཅི་བྱེད་ཀྱང་ mean?","whatever one does","what did one do?","although one does nothing","Indefinite plus concessive.",
+"What does ཞེས་ mark?","the end of a quoted question or thought","a reason","the plural","The quotation particle.",
+"Which quotation particle follows a word ending in ས་?","ཤེས་","ཞེས་","ཅེས་","Same rule as ཤིང་.",
+"What does མདོར་ན་ mean?","in brief","in the sūtra","if there is a sūtra","A fixed expression: to sum up."]});
+NEW.push({id:"37",name:"Stanza 37",L:[
+"དེ་ལྟར་|de ltar|in that way, thus;བརྩོན་པ|brtson pa|effort, striving;=ས་|i;བསྒྲུབ་|bsgrub|accomplished (stem of སྒྲུབ་);=པ|n;=འི་|g;དགེ་བ་|dge ba|virtue, merit;=རྣམས|p",
+"མཐའ་ཡས་;འགྲོ་བ;=འི་|g;སྡུག་བསྔལ་;བསལ་|bsal|to dispel (stem of སེལ་);བྱ|bya|to be done (future of བྱེད་);=འི་|g;ཕྱིར|phyir|in order to",
+"འཁོར་གསུམ་;རྣམ་པར་དག་|rnam par dag|completely pure;=པ|n;=འི་|g;ཤེས་རབ་;=ཀྱིས|i",
+"བྱང་ཆུབ་;བསྔོ་|bsngo|to dedicate;=བ་|n~"],
+tr:"To dedicate to awakening the virtue accomplished through such effort, with the wisdom that is pure of the three spheres, in order to dispel the suffering of limitless beings, is the practice of the bodhisattvas.",
+tk:["Compare line 2 with stanza 1 line 2 and stanza 10 line 3.","The same purpose frame each time: future stem + བྱའི་ཕྱིར་, in order to.",
+"Restore the prose form of བྱང་ཆུབ་བསྔོ་.","བྱང་ཆུབ་ཏུ་བསྔོ་བ་: to dedicate towards awakening. What is dedicated is དགེ་བ་རྣམས་ in line 1.",
+"Compare འཁོར་གསུམ་རྣམ་པར་དག་པ་ with stanza 30.","There: འཁོར་གསུམ་མི་རྟོག་པ་, not conceiving the three spheres. Here: completely pure of the three spheres. The same wisdom frames generosity and dedication."],
+qz:["What is dedicated?","དགེ་བ་རྣམས་","བྱང་ཆུབ་","ཤེས་རབ་","The virtue accomplished through effort.",
+"What does བསལ་བྱའི་ཕྱིར་ mean?","in order to dispel","because it was dispelled","after dispelling","Future stem + བྱའི་ཕྱིར་.",
+"In ཤེས་རབ་ཀྱིས་, what is ཀྱིས་?","instrumental: with wisdom","genitive: of wisdom","the agent of བསལ་","The wisdom with which one dedicates."]});
+NEW.push({id:"C1",tab:"End 1",name:"Concluding verse 1",L:[
+"མདོ་|mdo|sūtra;རྒྱུད་|rgyud|tantra;བསྟན་བཅོས་|bstan bcos|treatise (Skt. śāstra);=རྣམས་|p;=ལས་|s|from, in;གསུངས་|gsungs|taught (honorific);=པ|n;=འི་|g;དོན|don|meaning",
+"དམ་པ་|dam pa|holy beings;=རྣམས་|p;=ཀྱི་|g;གསུང་|gsung|speech, words (honorific);=གི་|g;རྗེས་|rjes|track, wake;འབྲངས་|'brangs|followed (past of འབྲང་);=ནས|s|having (links actions in sequence)",
+"རྒྱལ་སྲས་;=རྣམས་|p;=ཀྱི་|g;ལག་ལེན་;སུམ་ཅུ་བདུན|sum cu bdun|thirty-seven",
+"རྒྱལ་སྲས་;ལམ་|lam|path;=ལ་|l|in;སློབ་|slob|to train;འདོད་|'dod|to wish;དོན་དུ་;བཀོད|bkod|set down, composed (past of འགོད་)"],
+tr:"Following the words of the holy ones on the meaning taught in the sūtras, tantras and treatises, I have set down the thirty-seven practices of the bodhisattvas for the sake of those who wish to train on the bodhisattva path.",
+tk:["Find the main verb of the stanza and its object.","བཀོད་, set down. Its object is line 3, the thirty-seven practices. The agent, the author, is not expressed.",
+"What does X-འི་རྗེས་འབྲང་ mean?","To follow after X; in prose རྗེས་སུ་འབྲང་.",
+"Restore the prose form of སློབ་འདོད་དོན་དུ་.","སློབ་པར་འདོད་པ་རྣམས་ཀྱི་དོན་དུ་: for the sake of those who wish to train.",
+"Why ལས་ in བསྟན་བཅོས་རྣམས་ལས་གསུངས་?","Scriptures are cited as a source: taught in, literally from, the sūtras."],
+qz:["What is the main verb of the stanza?","བཀོད་","གསུངས་","འབྲངས་","The others sit inside subordinate clauses.",
+"སུམ་ཅུ་བདུན་ is the full form of what?","སོ་བདུན་","སུམ་བདུན་","བདུན་ཅུ་","As in the title.",
+"What does འབྲངས་ནས་ mean?","having followed","in order to follow","from the follower","ནས་ after a verb: sequence."]});
+NEW.push({id:"C2",tab:"End 2",name:"Concluding verse 2",L:[
+"བློ་གྲོས་|blo gros|intelligence;དམན་|dman|inferior, weak;=ཞིང་|j;སྦྱངས་པ་|sbyangs pa|training, learning;ཆུང་|chung|small;=བ|n;=འི་|g;ཕྱིར|phyir|because",
+"མཁས་|mkhas|the learned;=ལ་|l|for;དགྱེས་|dgyes|to please, to delight (honorific);=པ|n;=འི་|g;སྡེབ་སྦྱོར་|sdeb sbyor|poetic composition, metre;=མ་|z;མཆིས་|mchis|there is (humble);=ཏེ|t",
+"མདོ་;=དང་|j;དམ་པ;=འི་|g;གསུང་;=ལ་|l|on;བརྟེན་|brten|relied (past of རྟེན་);=པ|n;=འི་|g;ཕྱིར",
+"རྒྱལ་སྲས་;ལག་ལེན་;འཁྲུལ་མེད་|'khrul med|free of error;ལགས་|lags|is (polite);=པ|n;=ར་|l|marks what is thought: that;སེམས|sems|I think"],
+tr:"Because my intelligence is weak and my learning small, there is no poetry here to please the learned. Yet because I have relied on the sūtras and the words of the holy ones, I think these practices of the bodhisattvas are free of error.",
+tk:["V-པའི་ཕྱིར་ occurs twice. Compare it with V-བྱའི་ཕྱིར་.","After a present or past stem ཕྱིར་ means because. After a future stem with བྱ་ it means in order to.",
+"What register are མཆིས་ and ལགས་?","Humble and polite forms of ཡོད་ and ཡིན་. The author speaks modestly of his own work.",
+"What construction is ལགས་པར་སེམས་?","An object clause with པར་ before a verb of thinking: I think that it is. Compare འཇོམས་པར་ཤེས་ in stanza 29.",
+"Why ཏེ་ after མཆིས་?","ཏེ་ follows the suffix ས་. Here it sets up a contrast: there is none, and yet."],
+qz:["What does ཆུང་བའི་ཕྱིར་ mean?","because it is small","in order to be small","after being small","པའི་ཕྱིར་ after a present stem: because.",
+"What does མ་མཆིས་ mean?","there is not","did not arrive","do not go","Humble form of མེད་.",
+"ལགས་ is a polite form of which verb?","ཡིན་","ཡོད་","བྱེད་","Polite linking verb.",
+"What does གསུང་ལ་བརྟེན་ mean?","relied on the words","the words rely","relied upon by the words","བརྟེན་ takes ལ་."]});
+NEW.push({id:"C3",tab:"End 3",name:"Concluding verse 3",L:[
+"འོན་ཀྱང་|'on kyang|however;རྒྱལ་སྲས་;སྤྱོད་པ་|spyod pa|conduct, deeds;རླབས་ཆེན་|rlabs chen|vast, literally of great waves;=རྣམས|p",
+"བློ་དམན་|blo dman|of weak intellect;བདག་འདྲ|bdag 'dra|one like me;=ས་|a;གཏིང་|gting|depth;དཔག་|dpag|to fathom, to measure;དཀའ་;=བ|n;=འི་|g;ཕྱིར",
+"འགལ་|'gal|contradiction;=དང་|j;མ་འབྲེལ་|ma 'brel|lack of connection, incoherence;ལ་སོགས་|la sogs|and so forth;ཉེས་པ|nyes pa|fault;=འི་|g;ཚོགས|tshogs|mass, collection",
+"དམ་པ་;=རྣམས་|p;=ཀྱིས་|a;བཟོད་པ་|bzod pa|forbearance, forgiveness;མཛད་|mdzad|to do (honorific);=དུ་|l|joins the verb to གསོལ་;གསོལ|gsol|I pray, I request"],
+tr:"However, because the vast deeds of the bodhisattvas are hard for someone of weak intellect like me to fathom, I pray that the holy ones forgive my mass of faults, such as contradictions and incoherence.",
+tk:["What does V-དུ་གསོལ་ mean, and who does the མཛད་?","I request that you V: a polite petition. The holy ones, marked by the agentive, are the ones asked to act.",
+"བཟོད་པ་ appeared in stanza 27. What does it mean here?","There, patience as a perfection. Here, with མཛད་, to show forbearance: to forgive.",
+"What is བདག་འདྲས་?","One like me, with the agentive: the agent of དཔག་, to fathom.",
+"What is ལ་སོགས་?","The full form of སོགས་ from stanza 35: and so forth."],
+qz:["Who is asked to forgive?","དམ་པ་རྣམས་","རྒྱལ་སྲས་","བདག་","They carry the agentive ཀྱིས་.",
+"What does མཛད་དུ་གསོལ་ mean?","I pray that you do","you have done","do not do","V-དུ་གསོལ་: a polite request.",
+"What does གཏིང་དཔག་དཀའ་བའི་ཕྱིར་ mean?","because they are hard to fathom","in order to fathom them","although they are unfathomable","པའི་ཕྱིར་: because."]});
+NEW.push({id:"C4",tab:"End 4",name:"Concluding verse 4",L:[
+"དེ་|de|that, this;=ལས་|s;བྱུང་|byung|arisen;=བ|n;=འི་|g;དགེ་བ;=ས་|i|through;འགྲོ་བ་;ཀུན|kun|all",
+"དོན་དམ་|don dam|ultimate;ཀུན་རྫོབ་|kun rdzob|relative;བྱང་ཆུབ་སེམས་|byang chub sems|the mind of awakening (Skt. bodhicitta);མཆོག་;=གིས|i|through",
+"སྲིད་|srid|existence;=དང་|j;ཞི་བ|zhi ba|peace;=འི་|g;མཐའ་;=ལ་|l|in;=མི་|z;གནས་|gnas|to dwell;=པ|n;=འི|g",
+"སྤྱན་རས་གཟིགས་;མགོན་;དེ་;=དང་|o|with (required by མཚུངས་);མཚུངས་;=པ|n;=ར་|l|joins the verb to ཤོག་;ཤོག|shog|may it be so (wish)"],
+tr:"Through the virtue arising from this, may all beings, by means of the supreme mind of awakening, ultimate and relative, become equal to the protector Avalokiteśvara, who dwells in neither extreme, existence or peace.",
+tk:["What does V-པར་ཤོག་ express?","A wish or aspiration: may it V. ཤོག་ is the imperative of འོང་, to come, used for prayers.",
+"The text ends where it began. Compare this verse with the homage.","Both name Avalokiteśvara. Seeing that phenomena neither come nor go matches the ultimate mind of awakening; striving for beings matches the relative; together they are not dwelling in either extreme.",
+"There are two instrumentals, དགེ་བས་ and མཆོག་གིས་. What does each express?","Through this virtue: what makes the wish possible. By the mind of awakening: the means by which beings become like Avalokiteśvara.",
+"Find the relative clause.","སྲིད་དང་ཞི་བའི་མཐའ་ལ་མི་གནས་པའི་, closed by པའི་ and describing སྤྱན་རས་གཟིགས་མགོན་."],
+qz:["What does མཚུངས་པར་ཤོག་ mean?","may they become equal","they became equal","they are not equal","V-པར་ཤོག་: a wish.",
+"What does དེ་ལས་བྱུང་བའི་དགེ་བ་ mean?","the virtue arisen from that","that which arises from virtue","virtue departs from there","Relative clause before its noun.",
+"What does སྲིད་དང་ཞི་བའི་མཐའ་ mean?","the extremes of existence and peace","the end of a peaceful existence","existence at the edge of peace","དང་ joins the two nouns; the genitive links both to མཐའ་."]});
+NEW.push({id:"Col",tab:"Colophon",name:"The colophon",prose:true,L:[
+"ཅེས་པ་|ces pa|the above (literally: what is thus said);འདི་|'di|this;རང་གཞན་|rang gzhan|self and others;=ལ་|l|to;ཕན་|phan|to benefit;=པ|n;=འི་|g;དོན་དུ་",
+"ལུང་|lung|scripture;=དང་|j;རིགས་པ་|rigs pa|reasoning;སྨྲ་|smra|to speak, to expound;=བ|n;=འི་|g;བཙུན་པ་|btsun pa|monk;ཐོགས་མེད་|thogs med|Thogs med, the author's name;=ཀྱིས་|a",
+"དངུལ་ཆུ|dngul chu|dNgul chu (a place name: quicksilver);=འི་|g;རིན་ཆེན་ཕུག་|rin chen phug|Jewel Cave;=ཏུ་|l|in;སྦྱར་|sbyar|composed (past of སྦྱོར་);=བ|n;=འོ|f"],
+tr:"This was composed in the Jewel Cave of dNgul chu by the monk Thogs med, an exponent of scripture and reasoning, for the benefit of himself and others.",
+tk:["This is prose. Find the agent, the place and the verb.","Agent: བཙུན་པ་ཐོགས་མེད་ཀྱིས་. Place: རིན་ཆེན་ཕུག་ཏུ་. Verb: སྦྱར་བའོ་. Prose keeps the particles that verse dropped.",
+"What does ཅེས་པ་ refer to, and why ཅེས་ rather than ཞེས་?","To the whole text that precedes: what is thus said. ཅེས་ because the last word before it, ཤོག་, ends in ག་.",
+"What is འོ་?","The final particle after a vowel. Prose closes its sentences with it; the verses left it out throughout, except in the homage (ཕྱག་འཚལ་ལོ་).",
+"What kind of phrase is སྨྲ་བའི་བཙུན་པ་?","A relative clause before its noun: the monk who expounds scripture and reasoning."],
+qz:["Who composed the text?","ཐོགས་མེད་","དངུལ་ཆུ་","སྤྱན་རས་གཟིགས་","He carries the agentive ཀྱིས་.",
+"What does ཕུག་ཏུ་ mean?","in the cave","from the cave","of the cave","ཏུ་ after the suffix ག་.",
+"Why ཅེས་ and not ཞེས་ at the start?","The text before it ends in ག་ (ཤོག་)","ཅེས་ is the prose form","ཅེས་ marks a question","Same rule as ཅིང་.",
+"In སྦྱར་བའོ་, what is འོ་?","the final particle","a genitive","a nominaliser","It closes the sentence."]});
+
+/* ---------- compact lessons ---------- */
+var PD={"འི":"'i","གི":"gi","ཀྱི":"kyi","གྱི":"gyi","ཡི":"yi","གིས":"gis","ཀྱིས":"kyis","གྱིས":"gyis","ཡིས":"yis","ས":"-s","ལ":"la","ར":"-r","དུ":"du","ཏུ":"tu","སུ":"su","ན":"na","ལས":"las","ནས":"nas","པ":"pa","བ":"ba","ཀྱང":"kyang","ཡང":"yang","དང":"dang","ཞིང":"zhing","ཅིང":"cing","ཤིང":"shing","མི":"mi","མ":"ma","ཏེ":"te","སྟེ":"ste","རྣམས":"rnams","དག":"dag","ལྟར":"ltar","བཞིན":"bzhin","ཅན":"can","གམ":"gam","འམ":"'am","ཞེས":"zhes","འོ":"'o","ནི":"ni"};
+var CODE={g:["genitive","of"],a:["agentive","marks the agent"],i:["instrumental","with, by"],c:["agentive","because"],l:["la don","to, at, in"],s:["source","from"],n:["nominaliser",""],d:["conditional","if"],x:["concessive","although"],e:["inclusive","even, also"],t:["continuative","links to the next clause"],f:["final particle","closes the sentence"],z:["negation","not"],j:["coordinating","and"],p:["plural marker",""],m:["","like"],o:["",""]};
+var DICT={};
+function wkey(t){return t.replace(/[་༌]+$/,"");}
+LESSONS.forEach(function(les){les.lines.forEach(function(l){l.forEach(function(s){if(s[3]!==P)DICT[wkey(s[0])]=s;});});});
+function parseSeg(s){
+  s=s.trim();var f=s.split("|");
+  if(s.charAt(0)==="="){
+    var tib=f[0].slice(1),c=CODE[f[1]],w=PD[wkey(tib)];
+    if(!c||!w)throw new Error("particle? "+s);
+    var txt=f[2]||c[1];
+    return [tib,w,c[0]?(txt?c[0]+": "+txt:c[0]):txt,P];
+  }
+  if(f.length>=3){var seg=[f[0],f[1],f[2]];DICT[wkey(f[0])]=seg;return seg;}
+  var d=DICT[wkey(f[0])];if(!d)throw new Error("word? "+s);
+  return [f[0],d[1],d[2]];
+}
+NEW.forEach(function(c){
+  var lines=c.L.map(function(str){
+    var ref=/~$/.test(str);
+    var segs=str.replace(/~$/,"").split(";").filter(function(x){return x.trim();}).map(parseSeg);
+    if(ref){segs=segs.concat(REFRAIN);segs.refrain=true;}
+    return segs;
+  });
+  var talk=[],quiz=[],i;
+  for(i=0;i<c.tk.length;i+=2)talk.push([c.tk[i],c.tk[i+1]]);
+  for(i=0;i<c.qz.length;i+=5)quiz.push([c.qz[i],[c.qz[i+1],c.qz[i+2],c.qz[i+3]],c.qz[i+4]]);
+  LESSONS.push({id:c.id,tab:c.tab||c.id,name:c.name,lines:lines,tr:c.tr,talk:talk,quiz:quiz,prose:!!c.prose});
+});
+LESSONS.forEach(function(les){les.lines.forEach(function(l){
+  var n=l.length;if(n>=3&&l[n-1][0]==="ཡིན"&&l[n-2][0]==="ལག་ལེན་")l.refrain=true;});});
+
+/* ---------- state ---------- */
+var KEY="lagLen37-v1";
+var S={lesson:"T",step:0,done:{},notes:{},seen:{},read:{},showp:false};
+try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);for(var k in o){S[k]=o[k];}}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function L(){for(var i=0;i<LESSONS.length;i++){if(LESSONS[i].id===S.lesson)return LESSONS[i];}S.lesson="T";return LESSONS[0];}
+function doneOf(id){return S.done[id]||(S.done[id]=[false,false,false]);}
+function notesOf(id){return S.notes[id]||(S.notes[id]={tr:"",q:""});}
+function seenOf(id){return S.seen[id]||(S.seen[id]=[]);}
+
+var STEPS=[
+ {cls:"solo",title:"1. Before class",who:"On your own, about 20 minutes"},
+ {cls:"class",title:"2. In class",who:"With the teacher"},
+ {cls:"solo",title:"3. After class",who:"On your own, about 20 minutes"}
+];
+var cardIdx=0, cardFlip=false, showLeaf=false, quizAns={}, qCache={};
+
+function el(tag,attrs,kids){
+  var e=document.createElement(tag);
+  if(attrs){for(var a in attrs){
+    if(a==="text")e.textContent=attrs[a];
+    else if(a==="cls")e.className=attrs[a];
+    else if(a.slice(0,2)==="on")e.addEventListener(a.slice(2),attrs[a]);
+    else e.setAttribute(a,attrs[a]);
+  }}
+  if(kids){kids.forEach(function(k){if(k)e.appendChild(typeof k==="string"?document.createTextNode(k):k);});}
+  return e;
+}
+function rich(text,tag){
+  var e=el(tag||"span");
+  text.split(/([\u0F00-\u0FFF]+)/).forEach(function(part,i){
+    if(!part)return;
+    if(i%2)e.appendChild(el("span",{cls:"t",lang:"bo",text:part}));
+    else e.appendChild(document.createTextNode(part));
+  });
+  return e;
+}
+function shuffled(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function flatSegs(les){var a=[];les.lines.forEach(function(l){l.forEach(function(s){a.push(s);});});return a;}
+function vocab(les){var seen={},a=[];flatSegs(les).forEach(function(s){var k=wkey(s[0]);if(s[3]!==P&&!seen[k]){seen[k]=1;a.push(s);}});return a;}
+function lineEnd(les,li){
+  if(les.prose)return li===les.lines.length-1?"། །།":"";
+  var l=les.lines[li],last=l[l.length-1][0];
+  return /ག[\u0F71-\u0F7C]?$/.test(last)?" །":"། །";
+}
+function goTo(id){S.lesson=id;S.step=0;cardIdx=0;cardFlip=false;showLeaf=false;save();render();window.scrollTo(0,0);}
+
+/* ---------- nav ---------- */
+function renderNav(){
+  var nav=document.getElementById("nav");nav.textContent="";
+  var complete=0,cur=null;
+  var all=el("button",{"aria-current":String(S.lesson==="ALL"),onclick:function(){goTo("ALL");}},[el("span",{cls:"lab",text:"Full text"}),el("span",{cls:"pips"},[el("i",{cls:"none"})])]);
+  if(S.lesson==="ALL")cur=all;
+  nav.appendChild(all);
+  LESSONS.forEach(function(les){
+    var d=doneOf(les.id);if(d[0]&&d[1]&&d[2])complete++;
+    var pips=el("span",{cls:"pips","aria-hidden":"true"},STEPS.map(function(st,i){return el("i",{cls:(d[i]?"on ":"")+st.cls});}));
+    var n=d.filter(Boolean).length;
+    var b=el("button",{"aria-current":String(les.id===S.lesson),"aria-label":les.name+", "+n+" of 3 steps done",
+      onclick:function(){goTo(les.id);}},[el("span",{cls:"lab",text:les.tab}),pips]);
+    if(les.id===S.lesson)cur=b;
+    nav.appendChild(b);
+  });
+  if(cur)nav.scrollLeft=Math.max(0,cur.offsetLeft-nav.clientWidth/2+cur.offsetWidth/2);
+  document.getElementById("overall").textContent=complete+" of "+LESSONS.length+" lessons complete";
+}
+
+/* ---------- leaf ---------- */
+function renderLeaf(les){
+  var seen=seenOf(les.id);
+  var leaf=el("section",{cls:"leaf"+(S.showp?" showp":"")});
+  leaf.appendChild(el("h2",{text:les.name}));
+  if(S.step===2&&!showLeaf){
+    var sb=el("button",{cls:"btn",text:"Show the stanza"});
+    sb.addEventListener("click",function(){showLeaf=true;render();});
+    leaf.appendChild(el("p",{cls:"count",text:"The stanza is hidden while you do the exercises. Open it only to check."}));
+    leaf.appendChild(sb);
+    return leaf;
+  }
+  var total=flatSegs(les).length;
+  var count=el("span",{cls:"count",text:seen.length+" of "+total+" words opened"});
+  var cb=el("input",{type:"checkbox"});cb.checked=!!S.showp;
+  cb.addEventListener("change",function(){S.showp=cb.checked;save();leaf.classList.toggle("showp",S.showp);});
+  leaf.appendChild(el("div",{cls:"tools"},[el("span",{text:"Tap any word to see what it is."}),el("label",null,[cb,"Colour the particles"]),count]));
+  var gloss=el("div",{cls:"gloss empty","aria-live":"polite"},["Nothing selected yet."]);
+  var wrap=el("div",{cls:"tibwrap"});
+  var idx=0;
+  les.lines.forEach(function(line,li){
+    var p=el("p",{cls:"tibline",lang:"bo"});
+    line.forEach(function(s){
+      var my=idx++;
+      var sp=el("span",{cls:"seg"+(s[3]===P?" p":"")+(seen.indexOf(my)>=0?" seen":""),role:"button",tabindex:"0",text:s[0]});
+      function pick(){
+        var old=wrap.querySelector(".seg.sel");if(old)old.classList.remove("sel");
+        sp.classList.add("sel","seen");
+        if(seen.indexOf(my)<0){seen.push(my);save();count.textContent=seen.length+" of "+total+" words opened";}
+        gloss.className="gloss";gloss.textContent="";
+        gloss.appendChild(el("span",{cls:"gt",lang:"bo",text:wkey(s[0])+(s[0]===wkey(s[0])?"":"་")}));
+        gloss.appendChild(el("span",{cls:"gw",text:s[1]}));
+        gloss.appendChild(el("span",{cls:"gk",text:s[3]===P?"particle":"word"}));
+        var gm=rich(s[2]||"","span");gm.className="gm";gloss.appendChild(gm);
+      }
+      sp.addEventListener("click",pick);
+      sp.addEventListener("keydown",function(ev){if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();pick();}});
+      p.appendChild(sp);
+    });
+    p.appendChild(document.createTextNode(lineEnd(les,li)));
+    wrap.appendChild(p);
+  });
+  leaf.appendChild(wrap);leaf.appendChild(gloss);
+  leaf.appendChild(sheet("Translation","openTr",function(){return el("p",{cls:"trans",text:les.tr});}));
+  leaf.appendChild(sheet("Vocabulary: every word and particle of this lesson","openVoc",function(){return vocTable(les);}));
+  return leaf;
+}
+function sheet(title,key,build){
+  var d=el("details",{cls:"sheet"},[el("summary",{text:title}),build()]);
+  if(S[key])d.open=true;
+  d.addEventListener("toggle",function(){S[key]=d.open;save();});
+  return d;
+}
+function vocTable(les){
+  var seen={},rows=[];
+  flatSegs(les).forEach(function(s){
+    var k=wkey(s[0])+"|"+s[2];if(seen[k])return;seen[k]=1;
+    rows.push(el("tr",{cls:s[3]===P?"p":""},[
+      el("td",{cls:"t",lang:"bo",text:wkey(s[0])+(s[3]===P&&s[1].charAt(0)==="-"?"":"་")}),
+      el("td",{cls:"vw",text:s[1]}),
+      (function(){var td=rich(s[2]||"","td");if(s[3]===P)td.insertBefore(el("span",{cls:"gk",text:"particle "}),td.firstChild);return td;})()
+    ]));
+  });
+  var head=el("thead",null,[el("tr",null,[el("th",{text:"Tibetan"}),el("th",{text:"Wylie"}),el("th",{text:"Meaning"})])]);
+  return el("div",{cls:"vocwrap"},[el("table",{cls:"voc"},[head,el("tbody",null,rows)])]);
+}
+function renderAll(){
+  var leaf=el("section",{cls:"leaf"});
+  leaf.appendChild(el("h2",{text:"The complete text and translation"}));
+  leaf.appendChild(el("p",{cls:"count",text:"Press a heading to open that lesson."}));
+  LESSONS.forEach(function(les){
+    var h=el("button",{cls:"allhead",text:les.name});
+    h.addEventListener("click",function(){goTo(les.id);});
+    leaf.appendChild(h);
+    var w=el("div",{cls:"tibwrap"});
+    les.lines.forEach(function(line,li){
+      w.appendChild(el("p",{cls:"tibline small",lang:"bo",text:line.map(function(s){return s[0];}).join("")+lineEnd(les,li)}));
+    });
+    leaf.appendChild(w);
+    leaf.appendChild(el("p",{cls:"trans",text:les.tr}));
+  });
+  return leaf;
+}
+
+/* ---------- generic multiple-choice block ---------- */
+/* qs: [{prompt:Node, opts:[strings, first is right], why:string}] */
+function quizBlock(les,key,build){
+  var id=les.id+":"+key;
+  var qs=qCache[id]||(qCache[id]=build().map(function(q){q.order=shuffled(q.opts.map(function(_,i){return i;}));return q;}));
+  var ans=quizAns[id]||(quizAns[id]={});
+  var box=el("div");
+  if(!qs.length){box.appendChild(el("p",{cls:"count",text:"Nothing to review yet."}));return box;}
+  var score=el("p",{cls:"score","aria-live":"polite"});
+  function tally(){
+    var done=0,right=0;qs.forEach(function(q,i){if(ans[i]!==undefined){done++;if(ans[i]===0)right++;}});
+    score.textContent=done===qs.length?right+" of "+done+" correct":"";
+  }
+  qs.forEach(function(q,qi){
+    var why=rich(q.why||"","div");why.className="why";why.hidden=true;
+    var opts=el("div",{cls:"opts"});
+    q.order.forEach(function(oi){
+      var b=rich(q.opts[oi],"button");b.dataset.oi=oi;
+      b.addEventListener("click",function(){if(ans[qi]!==undefined)return;ans[qi]=oi;mark();tally();});
+      opts.appendChild(b);
+    });
+    function mark(){
+      if(ans[qi]===undefined)return;
+      Array.prototype.forEach.call(opts.children,function(b){
+        var oi=Number(b.dataset.oi);b.disabled=true;
+        if(oi===0){b.classList.add("right");b.appendChild(document.createTextNode(" ✓"));}
+        else if(oi===ans[qi]){b.classList.add("wrong");b.appendChild(document.createTextNode(" ✗"));}
+      });
+      if(q.why)why.hidden=false;
+    }
+    var qt=el("div",{cls:"qt"},[(qi+1)+". ",q.prompt]);
+    box.appendChild(el("div",{cls:"q"},[qt,opts,why]));
+    mark();
+  });
+  box.appendChild(score);tally();
+  var again=el("button",{cls:"btn",text:"Start this exercise again"});
+  again.addEventListener("click",function(){delete quizAns[id];delete qCache[id];render();});
+  box.appendChild(el("div",{cls:"row"},[again]));
+  return box;
+}
+function distractors(right,pool,n){
+  var out=[],seen={};seen[right]=1;
+  shuffled(pool).forEach(function(g){if(out.length<n&&!seen[g]){seen[g]=1;out.push(g);}});
+  return out;
+}
+function allGlosses(){var a=[];LESSONS.forEach(function(l){vocab(l).forEach(function(s){a.push(s[2]);});});return a;}
+function wordQs(words){
+  var pool=allGlosses();
+  return words.map(function(s){
+    return {prompt:rich("What does "+wkey(s[0])+"་ mean?"),opts:[s[2]].concat(distractors(s[2],pool,2)),why:s[1]};
+  });
+}
+function buildWordCheck(les){return function(){return wordQs(shuffled(vocab(les)).slice(0,8));};}
+function buildReview(les){return function(){
+  var i=LESSONS.indexOf(les),seen={},pool=[];
+  vocab(les).forEach(function(s){seen[wkey(s[0])]=1;});
+  LESSONS.slice(0,i).forEach(function(l){vocab(l).forEach(function(s){var k=wkey(s[0]);if(!seen[k]){seen[k]=1;pool.push(s);}});});
+  return wordQs(shuffled(pool).slice(0,5));
+};}
+var CATS=["genitive","agentive","instrumental","la don","source","nominaliser","conditional","concessive","negation","coordinating","continuative","final particle","plural marker"];
+function catOf(s){
+  if(s[3]!==P)return null;
+  for(var i=0;i<CATS.length;i++){if(s[2].indexOf(CATS[i])===0)return CATS[i];}
+  return null;
+}
+function lineNode(les,li,markIdx){
+  var p=el("span",{cls:"t qline",lang:"bo"});
+  les.lines[li].forEach(function(s,si){
+    if(si===markIdx)p.appendChild(el("mark",{text:s[0]}));else p.appendChild(document.createTextNode(s[0]));
+  });
+  p.appendChild(document.createTextNode(lineEnd(les,li)));
+  return p;
+}
+function buildParticles(les){return function(){
+  var items=[],seen={};
+  les.lines.forEach(function(l,li){l.forEach(function(s,si){
+    var c=catOf(s);if(!c)return;
+    var k=wkey(s[0])+c;if(seen[k])return;seen[k]=1;
+    items.push({li:li,si:si,c:c,s:s});
+  });});
+  return shuffled(items).slice(0,6).map(function(it){
+    var pool=CATS.filter(function(c){
+      if(it.c==="agentive"&&c==="instrumental")return false;
+      if(it.c==="instrumental"&&c==="agentive")return false;
+      return true;
+    });
+    var prompt=el("span",null,["What is the highlighted particle? ",el("br"),lineNode(les,it.li,it.si)]);
+    return {prompt:prompt,opts:[it.c].concat(distractors(it.c,pool,2)),why:it.s[1]+": "+it.s[2]};
+  });
+};}
+
+/* ---------- rebuild the line ---------- */
+function chunksOf(line){
+  var out=[];
+  line.forEach(function(s){
+    if(s[3]===P&&out.length)out[out.length-1]+=s[0];else out.push(s[0]);
+  });
+  return out;
+}
+function rebuildBlock(les){
+  var id=les.id+":rebuild";
+  var picks=qCache[id];
+  if(!picks){
+    var ok=[];
+    les.lines.forEach(function(l,li){if(!l.refrain&&chunksOf(l).length>=3)ok.push(li);});
+    if(!ok.length)les.lines.forEach(function(l,li){if(chunksOf(l).length>=3)ok.push(li);});
+    picks=qCache[id]=shuffled(ok).slice(0,2).sort().map(function(li){
+      var ch=chunksOf(les.lines[li]);return {li:li,chunks:ch,pool:shuffled(ch)};
+    });
+  }
+  var box=el("div");
+  picks.forEach(function(pk,n){
+    var pos=0,miss=0;
+    var ans=el("p",{cls:"tibline answer",lang:"bo","aria-live":"polite"});
+    var pool=el("div",{cls:"pool"});
+    var note=el("p",{cls:"count"});
+    function upd(){
+      if(pos===pk.chunks.length){ans.appendChild(document.createTextNode(lineEnd(les,pk.li)));note.textContent="Line complete"+(miss?", with "+miss+(miss===1?" wrong tap":" wrong taps"):", with no mistakes")+".";}
+      else note.textContent="Tap the pieces in the right order.";
+    }
+    pk.pool.forEach(function(c){
+      var b=el("button",{cls:"t",lang:"bo",text:c});
+      b.addEventListener("click",function(){
+        if(c===pk.chunks[pos]){ans.appendChild(document.createTextNode(c));pos++;b.remove();upd();}
+        else{miss++;b.classList.add("wrong");setTimeout(function(){b.classList.remove("wrong");},500);}
+      });
+      pool.appendChild(b);
+    });
+    upd();
+    box.appendChild(el("div",{cls:"q"},[el("div",{cls:"qt",text:"Line "+(pk.li+1)+" of the text"}),ans,pool,note]));
+  });
+  var again=el("button",{cls:"btn",text:"Start this exercise again"});
+  again.addEventListener("click",function(){delete qCache[id];render();});
+  box.appendChild(el("div",{cls:"row"},[again]));
+  return box;
+}
+
+/* ---------- steps ---------- */
+function markDone(les,i,v){doneOf(les.id)[i]=v;save();}
+function doneButton(les,i){
+  var d=doneOf(les.id);
+  var b=el("button",{cls:"btn main",text:d[i]?"Step done. Undo":"Mark this step done"});
+  b.addEventListener("click",function(){markDone(les,i,!d[i]);render();});
+  return b;
+}
+function stepBefore(les){
+  var box=el("div");
+  var n=notesOf(les.id);
+  box.appendChild(el("h3",{text:"Read"}));
+  var cb=el("input",{type:"checkbox",id:"readcb"});cb.checked=!!S.read[les.id];
+  cb.addEventListener("change",function(){S.read[les.id]=cb.checked;save();});
+  box.appendChild(el("div",{cls:"task"},[cb,el("label",{for:"readcb",text:"Read the lines above aloud twice, slowly, before looking anything up."})]));
+  box.appendChild(el("p",{text:"Then tap each word in the stanza. Words you have opened get a solid underline."}));
+
+  box.appendChild(el("h3",{text:"Learn the words"}));
+  var v=vocab(les);
+  if(cardIdx>=v.length)cardIdx=0;
+  var card=el("button",{cls:"card","aria-label":"Flashcard. Press to turn over."});
+  var pos=el("span",{cls:"count"});
+  function paint(){
+    card.textContent="";var s=v[cardIdx];
+    card.appendChild(el("span",{cls:"ct",lang:"bo",text:s[0]}));
+    if(cardFlip){card.appendChild(el("span",{cls:"cw",text:s[1]}));card.appendChild(rich(s[2],"span"));}
+    else card.appendChild(el("span",{cls:"hint",text:"Say the meaning, then turn the card"}));
+    pos.textContent="Card "+(cardIdx+1)+" of "+v.length;
+  }
+  card.addEventListener("click",function(){cardFlip=!cardFlip;paint();});
+  var prev=el("button",{cls:"btn",text:"Previous card"});
+  var next=el("button",{cls:"btn",text:"Next card"});
+  prev.addEventListener("click",function(){cardIdx=(cardIdx-1+v.length)%v.length;cardFlip=false;paint();});
+  next.addEventListener("click",function(){cardIdx=(cardIdx+1)%v.length;cardFlip=false;paint();});
+  box.appendChild(card);box.appendChild(el("div",{cls:"row"},[prev,next,pos]));paint();
+
+  box.appendChild(el("h3",{text:"Exercise A: check the new words"}));
+  box.appendChild(quizBlock(les,"words",buildWordCheck(les)));
+
+  if(LESSONS.indexOf(les)>0){
+    box.appendChild(el("h3",{text:"Exercise B: words from earlier lessons"}));
+    box.appendChild(quizBlock(les,"review",buildReview(les)));
+  }
+
+  box.appendChild(el("h3",{text:"Exercise "+(LESSONS.indexOf(les)>0?"C":"B")+": try your own translation"}));
+  box.appendChild(el("p",{text:"Write a rough translation. It does not need to be elegant; bring it to class."}));
+  var ta=el("textarea",{"aria-label":"My translation"});ta.value=n.tr;
+  ta.addEventListener("input",function(){n.tr=ta.value;save();});
+  box.appendChild(ta);
+  var rev=el("div",{cls:"reveal",hidden:"hidden",text:les.tr});
+  var rb=el("button",{cls:"btn",text:"Compare with a working translation"});
+  rb.addEventListener("click",function(){rev.hidden=!rev.hidden;rb.textContent=rev.hidden?"Compare with a working translation":"Hide the working translation";});
+  box.appendChild(el("div",{cls:"row"},[rb]));box.appendChild(rev);
+  box.appendChild(el("div",{cls:"row"},[doneButton(les,0)]));
+  return box;
+}
+function stepClass(les){
+  var box=el("div");
+  var n=notesOf(les.id);
+  box.appendChild(el("h3",{text:"Questions to work through together"}));
+  box.appendChild(el("p",{text:"Try to answer each question in class before opening the explanation."}));
+  les.talk.forEach(function(t){
+    var a=rich(t[1],"div");a.className="ans";
+    box.appendChild(el("details",{cls:"talk"},[rich(t[0],"summary"),a]));
+  });
+  box.appendChild(el("h3",{text:"My questions for the teacher"}));
+  var ta=el("textarea",{"aria-label":"My questions for the teacher",placeholder:"Anything from step 1 that was not clear"});ta.value=n.q;
+  ta.addEventListener("input",function(){n.q=ta.value;save();});
+  box.appendChild(ta);
+  box.appendChild(el("div",{cls:"row"},[doneButton(les,1)]));
+  return box;
+}
+function stepAfter(les){
+  var box=el("div");
+  box.appendChild(el("h3",{text:"Exercise A: grammar of this stanza"}));
+  box.appendChild(quizBlock(les,"grammar",function(){
+    return les.quiz.map(function(q){return {prompt:rich(q[0]),opts:q[1],why:q[2]};});
+  }));
+  box.appendChild(el("h3",{text:"Exercise B: name the particle"}));
+  box.appendChild(quizBlock(les,"particles",buildParticles(les)));
+  box.appendChild(el("h3",{text:"Exercise C: rebuild the line"}));
+  box.appendChild(el("p",{text:"Put the pieces back in order from memory. Particles stay attached to the word they follow."}));
+  box.appendChild(rebuildBlock(les));
+  var i=LESSONS.indexOf(les);
+  var row=el("div",{cls:"row"},[doneButton(les,2)]);
+  if(i<LESSONS.length-1){
+    var nx=el("button",{cls:"btn",text:"Go to "+LESSONS[i+1].name.replace(/^The /,"the ").replace(/^Stanza/,"stanza").replace(/^Concluding/,"concluding")});
+    nx.addEventListener("click",function(){goTo(LESSONS[i+1].id);});
+    row.appendChild(nx);
+  }
+  box.appendChild(row);
+  return box;
+}
+function render(){
+  renderNav();
+  var main=document.getElementById("main");main.textContent="";
+  if(S.lesson==="ALL"){main.appendChild(renderAll());return;}
+  var les=L();
+  main.appendChild(renderLeaf(les));
+  var tabs=el("div",{cls:"steps",role:"tablist"});
+  var d=doneOf(les.id);
+  STEPS.forEach(function(st,i){
+    var b=el("button",{cls:st.cls,role:"tab","aria-selected":String(S.step===i)},
+      [d[i]?el("span",{cls:"tick",text:"✓ done"}):null,el("b",{text:st.title}),el("span",{text:st.who})]);
+    b.addEventListener("click",function(){S.step=i;showLeaf=false;save();render();});
+    tabs.appendChild(b);
+  });
+  var panel=el("section",{role:"tabpanel",cls:"panel "+STEPS[S.step].cls});
+  panel.appendChild([stepBefore,stepClass,stepAfter][S.step](les));
+  main.appendChild(tabs);main.appendChild(panel);
+}
+document.getElementById("reset").addEventListener("click",function(){
+  var rb=document.getElementById("reset");
+  if(rb.dataset.armed!=="1"){rb.dataset.armed="1";rb.textContent="Press again to clear everything";setTimeout(function(){rb.dataset.armed="";rb.textContent="Clear my progress";},4000);return;}
+  rb.dataset.armed="";rb.textContent="Clear my progress";
+  try{localStorage.removeItem(KEY);}catch(e){}
+  S={lesson:"T",step:0,done:{},notes:{},seen:{},read:{},showp:false};quizAns={};qCache={};render();
+});
+if(!(S.step>=0&&S.step<=2))S.step=0;
+render();
+
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
+</body>
+</html>
